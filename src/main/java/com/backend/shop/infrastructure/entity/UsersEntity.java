@@ -2,7 +2,6 @@ package com.backend.shop.infrastructure.entity;
 
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 

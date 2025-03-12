@@ -48,7 +48,7 @@ private final PasswordEncoder passwordEncoder;
         
         String token = jwtService.generateToken(user.getEmail());
         String refresnToken = jwtService.generateRefreshToken(user.getEmail());
-        return new TokenDTO(token,refresnToken);
+        return new TokenDTO(token,refresnToken,user.getRoles());
     }
 
 }
