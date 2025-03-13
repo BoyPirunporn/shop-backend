@@ -5,11 +5,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ProductVariantDTO {
+    private Long id;
     private BigDecimal price;
     private String sku;
     private Integer stock;
     private VariantImageDTO variantImage;
     private List<ProductVariantOptionDTO> productVariantOptions = new ArrayList<>();
+
+
+
+
     public BigDecimal getPrice() {
         return price;
     }
@@ -41,4 +46,11 @@ public class ProductVariantDTO {
         this.productVariantOptions = productVariantOptions;
     }
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 }

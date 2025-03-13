@@ -7,7 +7,7 @@ import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
 
-@Entity(name = "product_optoin")
+@Entity(name = "product_option")
 public class ProductOptionEntity extends BaseEntity {
     private String name;
 

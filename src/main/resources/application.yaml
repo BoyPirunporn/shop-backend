@@ -10,9 +10,10 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
+    show-sql: true
     properties:
-      show-sql: true
-      format_sql: true
+      hibernate:
+        format_sql: true
 
 api:
   prefix: /api/v1

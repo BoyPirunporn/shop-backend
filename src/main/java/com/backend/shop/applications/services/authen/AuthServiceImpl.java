@@ -1,4 +1,4 @@
-package com.backend.shop.applications.services;
+package com.backend.shop.applications.services.authen;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -26,7 +26,7 @@ private final PasswordEncoder passwordEncoder;
     }
 
     @Override
-    public String signUp(AuthDTO auth) {
+    public TokenDTO signUp(AuthDTO auth) {
         System.out.println(auth.toString());
         User user = new User(auth.getEmail(), passwordEncoder.encode(auth.getPassword()), auth.getRoles());
         if (authUsecase.existingByEmail(auth.getEmail())) {
@@ -34,7 +34,8 @@ private final PasswordEncoder passwordEncoder;
         }
         User saveUser = authUsecase.createUser(user);
         String token = jwtService.generateToken(saveUser.getEmail());
-        return token;
+        String refresnToken = jwtService.generateRefreshToken(user.getEmail());
+        return new TokenDTO(token,refresnToken,user.getRoles());
 
     }
 

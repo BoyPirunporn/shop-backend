@@ -4,6 +4,7 @@ public class VariantImage {
 
     private Long id;
     private String url;
+    private ProductVariant productVariant;
     public Long getId() {
         return id;
     }
@@ -17,5 +18,12 @@ public class VariantImage {
         this.url = url;
     }
 
-    
+
+    public ProductVariant getProductVariant() {
+        return productVariant;
+    }
+
+    public void setProductVariant(ProductVariant productVariant) {
+        this.productVariant = productVariant;
+    }
 }

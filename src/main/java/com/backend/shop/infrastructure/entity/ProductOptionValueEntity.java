@@ -1,5 +1,6 @@
 package com.backend.shop.infrastructure.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -9,6 +10,7 @@ public class ProductOptionValueEntity extends BaseEntity {
 
     private String value;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "product_option_id",nullable = false)
     private ProductOptionEntity productOption;

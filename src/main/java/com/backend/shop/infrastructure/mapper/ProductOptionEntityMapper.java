@@ -6,10 +6,9 @@ import org.mapstruct.Mapping;
 import com.backend.shop.domains.models.ProductOption;
 import com.backend.shop.infrastructure.entity.ProductOptionEntity;
 
-@Mapper(componentModel = "spring",uses = {ProductOptionValueMapper.class})
-public interface ProductOptionMapper {
+@Mapper(componentModel = "spring",uses = {ProductOptionValueEntityMapper.class})
+public interface ProductOptionEntityMapper {
     
-    @Mapping(target = "id",source = "id")
     ProductOption toModel(ProductOptionEntity entity);
     ProductOptionEntity toEntity(ProductOption model);
 }

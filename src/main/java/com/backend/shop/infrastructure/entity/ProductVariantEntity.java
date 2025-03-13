@@ -24,7 +24,7 @@ public class ProductVariantEntity extends BaseEntity {
     @JoinColumn(name = "product_id",nullable = false)
     private ProductEntity product;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "image_id",referencedColumnName = "id")
     private VariantImageEntity variantImage;
 

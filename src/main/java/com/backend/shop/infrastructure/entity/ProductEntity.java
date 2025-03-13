@@ -4,10 +4,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 
 @Entity(name = "products")
 public class ProductEntity extends BaseEntity {
@@ -20,8 +17,7 @@ public class ProductEntity extends BaseEntity {
     @JoinColumn(name = "category_id",referencedColumnName = "id")
     private CategoryEntity category;
 
-    @OneToMany
-    @JoinColumn(name = "product_id",referencedColumnName = "id")
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProductVariantEntity> productVariants = new ArrayList<>();
 
 

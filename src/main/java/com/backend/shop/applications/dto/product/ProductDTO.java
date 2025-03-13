@@ -5,12 +5,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ProductDTO {
+    private Long id;
     private String name;
     private String description;
     private BigDecimal price;
     private String mainImage;
     private String category;
     private List<ProductVariantDTO> productVariants = new ArrayList<>();
+
+
     public String getName() {
         return name;
     }
@@ -53,7 +56,12 @@ public class ProductDTO {
                 + mainImage + ", category=" + category + "]";
     }
 
-    
 
-    
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 }
