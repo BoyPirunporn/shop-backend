@@ -11,6 +11,12 @@ public class TokenDTO {
     
     public TokenDTO() {
     }
+
+    public TokenDTO(String token, String refreshToken) {
+        this.token = token;
+        this.refreshToken = refreshToken;
+    }
+
     public TokenDTO(String token, String refreshToken, Set<ERole> roles) {
         this.token = token;
         this.roles = roles;

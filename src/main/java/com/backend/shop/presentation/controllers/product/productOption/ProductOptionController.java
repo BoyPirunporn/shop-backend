@@ -22,7 +22,7 @@ public class ProductOptionController {
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<ResponseWithPayload<ProductOptionDTO>> getById(@RequestParam Long id){
+    public ResponseEntity<ResponseWithPayload<ProductOptionDTO>> getById(@PathVariable Long id){
         ProductOptionDTO productOptionDTO = productOptionService.getById(id);
         return ResponseEntity.ok(new ResponseWithPayload<>(200,productOptionDTO));
     }

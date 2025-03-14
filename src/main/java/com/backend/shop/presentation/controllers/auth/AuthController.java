@@ -1,7 +1,9 @@
 package com.backend.shop.presentation.controllers.auth;
 
 import com.backend.shop.domains.ResponseWithPayload;
+import com.backend.shop.infrastructure.exceptions.BaseException;
 import org.antlr.v4.runtime.Token;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,6 +17,8 @@ import com.backend.shop.applications.dto.auth.TokenDTO;
 import com.backend.shop.applications.interfaces.IAuthService;
 
 import jakarta.validation.Valid;
+
+import java.util.Map;
 
 
 @RestController
@@ -42,6 +46,16 @@ public class AuthController {
         response.setStatus(200);
         response.setPayload(token);
         return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("refresh-token")
+    public ResponseEntity<ResponseWithPayload<TokenDTO>> refreshToken(@RequestBody Map<String,String> body){
+        System.out.println(body.toString());
+        if(!body.containsKey("refreshToken")){
+            throw new BaseException("Unauthorized", HttpStatus.UNAUTHORIZED);
+        }
+            TokenDTO token = authService.refreshToken(body.get("refreshToken"));
+        return ResponseEntity.ok(new ResponseWithPayload<>(200,token));
     }
 
 }

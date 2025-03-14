@@ -7,4 +7,5 @@ import com.backend.shop.applications.dto.auth.TokenDTO;
 public interface IAuthService {
     public TokenDTO signUp(AuthDTO auth);
     public TokenDTO signIn(SignInDTO sign);
+    public TokenDTO refreshToken(String refreshToken);
 }

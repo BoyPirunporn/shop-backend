@@ -1,6 +1,8 @@
 package com.backend.shop.applications.services.authen;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -18,10 +20,13 @@ public class AuthServiceImpl implements IAuthService {
 
     private final IAuthUsecase authUsecase;
     private final IJwtService jwtService;
+    private final UserDetailsService userDetailsService;
+
 private final PasswordEncoder passwordEncoder;
-    public AuthServiceImpl(IAuthUsecase authUsecase, IJwtService jwtService,PasswordEncoder passwordEncoder) {
+    public AuthServiceImpl(IAuthUsecase authUsecase, IJwtService jwtService, UserDetailsService userDetailsService, PasswordEncoder passwordEncoder) {
         this.authUsecase = authUsecase;
         this.jwtService = jwtService;
+        this.userDetailsService = userDetailsService;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -50,6 +55,17 @@ private final PasswordEncoder passwordEncoder;
         String token = jwtService.generateToken(user.getEmail());
         String refresnToken = jwtService.generateRefreshToken(user.getEmail());
         return new TokenDTO(token,refresnToken,user.getRoles());
+    }
+
+    @Override
+    public TokenDTO refreshToken(String refreshToken) {
+        String username = jwtService.extractUsername(refreshToken);
+        UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+        if (!jwtService.isTokenValid(refreshToken, userDetails)) {
+            throw new BaseException("Invalid Refresh Token", HttpStatus.UNAUTHORIZED);
+        }
+        String newAccessToken = jwtService.generateToken(userDetails.getUsername());
+        return new TokenDTO(newAccessToken,refreshToken);
     }
 
 }
