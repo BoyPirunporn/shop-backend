@@ -71,4 +71,9 @@ public class ProductUsecase implements IProductUsecase {
         return productEntityMapper.toModel(productJpaRepository.findByNameContainingIgnoreCase(name).orElse(null));
     }
 
+    @Override
+    public Product getProductById(Long id) {
+        return productEntityMapper.toModel(productJpaRepository.findById(id).orElse(null));
+    }
+
 }

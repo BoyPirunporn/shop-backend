@@ -29,3 +29,4 @@ application:
       expiration: 900000
       refresh-token:
         expiration: 3600000
+  file-store: /Users/prpasn/Desktop/Coding/WebApp/e-commerce/uploads

@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.backend.shop.infrastructure.jwt.exceptions.JwtException;
-import org.springframework.web.servlet.mvc.support.DefaultHandlerExceptionResolver;
 
 @RestControllerAdvice
 public class AdviceHandleException {
@@ -53,6 +52,14 @@ public class AdviceHandleException {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<IAdviceHandler> throwException(Exception ex){
+        IAdviceHandler adviceHandler = new IAdviceHandler();
+        ex.printStackTrace();
+        adviceHandler.setMessage(ex.getMessage());
+        adviceHandler.setStatus(500);
+        return new ResponseEntity<>(adviceHandler, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+    @ExceptionHandler(Throwable.class)
+    public ResponseEntity<IAdviceHandler> throwException(Throwable ex){
         IAdviceHandler adviceHandler = new IAdviceHandler();
         ex.printStackTrace();
         adviceHandler.setMessage(ex.getMessage());

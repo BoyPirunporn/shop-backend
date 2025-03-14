@@ -28,15 +28,25 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(authorize -> authorize.requestMatchers(
+                        "/files/**",
                         "/api/v1/auth/**", // ✅ ต้องมี / นำหน้า
                         "/swagger-ui/**", // ✅ ต้องมี / นำหน้า
                         "/v3/api-docs", // ✅ ต้องมี / นำหน้า
                         "/v3/api-docs/swagger-config"
-                        ).permitAll()
+
+                ).permitAll()
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(filterJwt, UsernamePasswordAuthenticationFilter.class)
-                .authenticationProvider(authenticationProvider);
+                .authenticationProvider(authenticationProvider)
+                .exceptionHandling((accessDenied) -> {
+                    accessDenied.accessDeniedHandler((request, response, accessDeniedException) -> {
+                        accessDeniedException.printStackTrace();
+                        response.setStatus(403);
+                        response.getWriter().write(accessDeniedException.getMessage());
+                    });
+                })
+                ;
         return http.build();
     }
 

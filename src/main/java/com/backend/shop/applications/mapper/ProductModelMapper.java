@@ -1,6 +1,7 @@
 package com.backend.shop.applications.mapper;
 
 import com.backend.shop.applications.dto.product.ProductDTO;
+import com.backend.shop.applications.dto.product.request.ProductRequestDTO;
 import com.backend.shop.domains.models.Category;
 import com.backend.shop.domains.models.Product;
 import org.mapstruct.Mapper;
@@ -14,6 +15,11 @@ public interface ProductModelMapper {
     Product toModel(ProductDTO dto);
     @Mapping(target = "category",source = "category",qualifiedByName = "categoryModelToString")
     ProductDTO toDTO(Product model);
+
+    @Mapping(target = "mainImage",ignore = true)
+    @Mapping(target = "category",source = "category",qualifiedByName = "categoryStringToModel")
+    @Mapping(target = "productVariants",ignore = true)
+    Product toModel(ProductRequestDTO requestDTO);
 
 
 
