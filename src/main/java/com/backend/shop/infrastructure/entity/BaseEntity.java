@@ -1,11 +1,17 @@
 package com.backend.shop.infrastructure.entity;
 
-import jakarta.persistence.*;
+import java.time.LocalDateTime;
+
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.time.LocalDateTime;
+import jakarta.persistence.Column;
+import jakarta.persistence.EntityListeners;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.MappedSuperclass;
 
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
@@ -15,7 +21,7 @@ public abstract class BaseEntity {
     private Long id;
 
     @CreatedDate
-    @Column(insertable = false, updatable = false) // ✅ ห้ามอัปเดต createdAt โดยเด็ดขาด
+    @Column(updatable = false) // ✅ ห้ามอัปเดต createdAt โดยเด็ดขาด
     private LocalDateTime createdAt;
 
     @LastModifiedDate

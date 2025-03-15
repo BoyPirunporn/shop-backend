@@ -24,6 +24,10 @@ public class ProductOptionValue {
     public void setProductOption(ProductOption productOption) {
         this.productOption = productOption;
     }
+    @Override
+    public String toString() {
+        return "ProductOptionValue [id=" + id + ", value=" + value + "]";
+    }
 
 
    

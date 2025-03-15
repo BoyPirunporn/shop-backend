@@ -1,9 +1,8 @@
 package com.backend.shop.applications.interfaces;
 
-import com.backend.shop.applications.dto.category.CategoryDTO;
-import com.backend.shop.domains.models.Category;
-
 import java.util.List;
+
+import com.backend.shop.applications.dto.category.CategoryDTO;
 
 public interface ICategoryService {
     void createCategory(CategoryDTO category);

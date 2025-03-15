@@ -22,8 +22,10 @@ public class AuthServiceImpl implements IAuthService {
     private final IJwtService jwtService;
     private final UserDetailsService userDetailsService;
 
-private final PasswordEncoder passwordEncoder;
-    public AuthServiceImpl(IAuthUsecase authUsecase, IJwtService jwtService, UserDetailsService userDetailsService, PasswordEncoder passwordEncoder) {
+    private final PasswordEncoder passwordEncoder;
+
+    public AuthServiceImpl(IAuthUsecase authUsecase, IJwtService jwtService, UserDetailsService userDetailsService,
+            PasswordEncoder passwordEncoder) {
         this.authUsecase = authUsecase;
         this.jwtService = jwtService;
         this.userDetailsService = userDetailsService;
@@ -40,7 +42,7 @@ private final PasswordEncoder passwordEncoder;
         User saveUser = authUsecase.createUser(user);
         String token = jwtService.generateToken(saveUser.getEmail());
         String refresnToken = jwtService.generateRefreshToken(user.getEmail());
-        return new TokenDTO(token,refresnToken,user.getRoles());
+        return new TokenDTO(token, refresnToken, user.getRoles());
 
     }
 
@@ -48,13 +50,13 @@ private final PasswordEncoder passwordEncoder;
     public TokenDTO signIn(SignInDTO sign) {
         User user = authUsecase.findByEmail(sign.getEmail());
         System.out.println(user.getPassword());
-        if (user == null || !passwordEncoder.matches(sign.getPassword(),user.getPassword())) {
+        if (user == null || !passwordEncoder.matches(sign.getPassword(), user.getPassword())) {
             throw new BaseException("Email or password not found", HttpStatus.UNAUTHORIZED);
         }
-        
+
         String token = jwtService.generateToken(user.getEmail());
         String refresnToken = jwtService.generateRefreshToken(user.getEmail());
-        return new TokenDTO(token,refresnToken,user.getRoles());
+        return new TokenDTO(token, refresnToken, user.getRoles());
     }
 
     @Override
@@ -65,7 +67,12 @@ private final PasswordEncoder passwordEncoder;
             throw new BaseException("Invalid Refresh Token", HttpStatus.UNAUTHORIZED);
         }
         String newAccessToken = jwtService.generateToken(userDetails.getUsername());
-        return new TokenDTO(newAccessToken,refreshToken);
+        return new TokenDTO(newAccessToken, refreshToken);
+    }
+
+    @Override
+    public User getByEmail(String email) {
+       return  authUsecase.findByEmail(email);
     }
 
 }

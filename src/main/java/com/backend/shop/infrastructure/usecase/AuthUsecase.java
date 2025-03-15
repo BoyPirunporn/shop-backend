@@ -2,8 +2,6 @@ package com.backend.shop.infrastructure.usecase;
 
 import java.beans.Transient;
 
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.backend.shop.domains.models.User;

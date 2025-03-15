@@ -29,4 +29,11 @@ public class ProductVariantOption {
     public void setProductOptionValue(ProductOptionValue productOptionValue) {
         this.productOptionValue = productOptionValue;
     }
+
+    @Override
+    public String toString() {
+        return "ProductVariantOption [productOptionValue.value=" + productOptionValue.getValue() + "]";
+    }
+
+    
 }

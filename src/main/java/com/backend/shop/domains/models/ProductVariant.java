@@ -69,4 +69,12 @@ public class ProductVariant {
     public void setProductVariantOptions(List<ProductVariantOption> productVariantOptions) {
         this.productVariantOptions = productVariantOptions;
     }
+
+    @Override
+    public String toString() {
+        return "ProductVariant [id=" + id + ", price=" + price + ", sku=" + sku + ", stock=" + stock + "]";
+    }
+
+    
+
 }

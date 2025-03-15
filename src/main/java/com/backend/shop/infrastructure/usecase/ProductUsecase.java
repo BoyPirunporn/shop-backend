@@ -1,20 +1,22 @@
 package com.backend.shop.infrastructure.usecase;
 
 import java.util.List;
-import java.util.Optional;
 
-import com.backend.shop.applications.dto.product.ProductDTO;
-import com.backend.shop.infrastructure.entity.*;
-import com.backend.shop.infrastructure.exceptions.BaseException;
-import com.backend.shop.infrastructure.mapper.ProductEntityMapper;
-import com.backend.shop.infrastructure.repository.CategoryJpaRepository;
-import jakarta.transaction.Transactional;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.backend.shop.domains.models.Product;
 import com.backend.shop.domains.usecase.IProductUsecase;
+import com.backend.shop.infrastructure.entity.CategoryEntity;
+import com.backend.shop.infrastructure.entity.ProductEntity;
+import com.backend.shop.infrastructure.entity.ProductVariantEntity;
+import com.backend.shop.infrastructure.entity.ProductVariantOptionEntity;
+import com.backend.shop.infrastructure.exceptions.BaseException;
+import com.backend.shop.infrastructure.mapper.ProductEntityMapper;
+import com.backend.shop.infrastructure.repository.CategoryJpaRepository;
 import com.backend.shop.infrastructure.repository.ProductJpaRepository;
+
+import jakarta.transaction.Transactional;
 
 @Service
 public class ProductUsecase implements IProductUsecase {
