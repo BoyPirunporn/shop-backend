@@ -13,6 +13,7 @@ import com.backend.shop.domains.models.VariantImage;
 import com.backend.shop.infrastructure.exceptions.BaseException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.backend.shop.applications.dto.product.ProductDTO;
 import com.backend.shop.applications.dto.product.ProductVariantOptionDTO;
@@ -46,7 +47,6 @@ public class ProductServiceImpl implements IProductService {
         return productModelMapper.toDTO(product);
     }
 
-
     @Override
     public ProductDTO getProductById(Long id) {
         Product product = productUsecase.getProductById(id);
@@ -61,10 +61,7 @@ public class ProductServiceImpl implements IProductService {
         return productUsecase.getAllProducts(page, size).stream().map(productModelMapper::toDTO).toList();
     }
 
-    @Override
-    public void updateProduct(ProductDTO product) {
-        productUsecase.createProduct(productModelMapper.toModel(product));
-    }
+
 
     @Override
     public void deleteProduct(Long id) {
@@ -74,11 +71,16 @@ public class ProductServiceImpl implements IProductService {
     @Override
     public void createProduct(ProductRequestDTO product) throws IOException {
         Product productModel = productModelMapper.toModel(product);
-        System.out.println("SIZE : " + product.getProductVariants().size());
+        System.out.println("Product Id : " + product.getId());
 
-        // สร้าง path สำหรับ main image
-        String pathFile = fileService.createPath(product.getMainImage());
-        productModel.setMainImage(pathFile);
+        if (product.getMainImage() instanceof MultipartFile) {
+            MultipartFile mainImage = (MultipartFile) product.getMainImage();
+            // สร้าง path สำหรับ main image
+            String pathFile = fileService.createPath(mainImage);
+            productModel.setMainImage(pathFile);
+        } else {
+            productModel.setMainImage((String) product.getMainImage());
+        }
 
         // สร้าง Product Variants
         List<ProductVariant> productVariants = createProductVariants(product.getProductVariants(), productModel);
@@ -86,7 +88,30 @@ public class ProductServiceImpl implements IProductService {
         // ตั้งค่าผลิตภัณฑ์
         productModel.setProductVariants(productVariants);
 
-        System.out.println("PRODUCT OPTION VALUE : "+productModel.getProductVariants().get(0).getProductVariantOptions().get(0).getProductOptionValue().getValue());
+        System.out.println("getProductVariantOptions : " + productModel.getProductVariants().get(0)
+                .getProductVariantOptions().get(0).getId());
+        productUsecase.createProduct(productModel);
+    }
+
+    @Override
+    public void updateProduct(ProductRequestDTO product) throws IOException {
+        Product productModel = productModelMapper.toModel(product);
+        System.out.println("SIZE : " + product.getProductVariants().size());
+
+        if (product.getMainImage() instanceof MultipartFile) {
+            MultipartFile mainImage = (MultipartFile) product.getMainImage();
+            // สร้าง path สำหรับ main image
+            String pathFile = fileService.createPath(mainImage);
+            productModel.setMainImage(pathFile);
+        } else {
+            productModel.setMainImage((String) product.getMainImage());
+        }
+
+        // สร้าง Product Variants
+        List<ProductVariant> productVariants = createProductVariants(product.getProductVariants(), productModel);
+
+        productModel.setProductVariants(productVariants);
+
         productUsecase.createProduct(productModel);
     }
 
@@ -96,6 +121,7 @@ public class ProductServiceImpl implements IProductService {
 
         for (ProductVariantRequestDTO productVariantDTO : productVariantDTOs) {
             ProductVariant productVariant = new ProductVariant();
+            productVariant.setId(productVariantDTO.getId());
             productVariant.setProduct(productModel);
             productVariant.setSku(productVariantDTO.getSku());
             productVariant.setPrice(productVariantDTO.getPrice());
@@ -119,6 +145,7 @@ public class ProductServiceImpl implements IProductService {
         if (!productVariantOptionsDTO.isEmpty()) {
             for (ProductVariantOptionDTO variantOption : productVariantOptionsDTO) {
                 ProductVariantOption productVariantOption = new ProductVariantOption();
+                productVariantOption.setId(variantOption.getId());
                 productVariantOption.setProductVariant(productVariant);
 
                 ProductOptionValue productOptionValue = new ProductOptionValue();
@@ -134,11 +161,18 @@ public class ProductServiceImpl implements IProductService {
     private void createVariantImage(ProductVariantRequestDTO productVariantDTO, ProductVariant productVariant)
             throws IOException {
         VariantImage variantImage = new VariantImage();
+        variantImage.setId(productVariantDTO.getVariantImage().getId());
         variantImage.setProductVariant(productVariant);
+        
+        Object url = productVariantDTO.getVariantImage().getUrl();
 
-        // สร้าง path สำหรับ variant image
-        String pathFileVariant = fileService.createPath(productVariantDTO.getVariantImage().getUrl());
-        variantImage.setUrl(pathFileVariant);
+        if (url instanceof MultipartFile) {
+            // สร้าง path สำหรับ variant image
+            String pathFileVariant = fileService.createPath((MultipartFile)url);
+            variantImage.setUrl(pathFileVariant);
+        }else{
+            variantImage.setUrl((String)url);
+        }
 
         // ตั้งค่า variantImage ให้กับ productVariant
         productVariant.setVariantImage(variantImage);

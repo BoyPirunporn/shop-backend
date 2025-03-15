@@ -58,15 +58,7 @@ public class AdviceHandleException {
         adviceHandler.setStatus(500);
         return new ResponseEntity<>(adviceHandler, HttpStatus.INTERNAL_SERVER_ERROR);
     }
-    @ExceptionHandler(Throwable.class)
-    public ResponseEntity<IAdviceHandler> throwException(Throwable ex){
-        IAdviceHandler adviceHandler = new IAdviceHandler();
-        ex.printStackTrace();
-        adviceHandler.setMessage(ex.getMessage());
-        adviceHandler.setStatus(500);
-        return new ResponseEntity<>(adviceHandler, HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-
+   
     public class IAdviceHandler {
         String message;
         int status;

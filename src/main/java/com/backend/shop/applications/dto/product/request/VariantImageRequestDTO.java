@@ -1,15 +1,22 @@
 package com.backend.shop.applications.dto.product.request;
 
-import org.springframework.web.multipart.MultipartFile;
-
 public class VariantImageRequestDTO {
-    private MultipartFile url;
+    private Long id;
+    public Long getId() {
+        return id;
+    }
 
-    public MultipartFile getUrl() {
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    private Object url;
+
+    public Object getUrl() {
         return url;
     }
 
-    public void setUrl(MultipartFile url) {
+    public void setUrl(Object url) {
         this.url = url;
     }
 

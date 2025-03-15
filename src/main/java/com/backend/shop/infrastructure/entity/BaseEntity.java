@@ -15,6 +15,7 @@ public abstract class BaseEntity {
     private Long id;
 
     @CreatedDate
+    @Column(insertable = false, updatable = false) // ✅ ห้ามอัปเดต createdAt โดยเด็ดขาด
     private LocalDateTime createdAt;
 
     @LastModifiedDate

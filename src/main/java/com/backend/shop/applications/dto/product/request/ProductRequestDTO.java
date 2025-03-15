@@ -4,13 +4,20 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.web.multipart.MultipartFile;
 
 public class ProductRequestDTO {
+    private Long id;
+   
+    public Long getId() {
+        return id;
+    }
+    public void setId(Long id) {
+        this.id = id;
+    }
     private String name;
     private String description;
     private BigDecimal price;
-    private MultipartFile mainImage;
+    private Object mainImage;
     private String category;
     private List<ProductVariantRequestDTO> productVariants = new ArrayList<>();
     public String getName() {
@@ -31,10 +38,10 @@ public class ProductRequestDTO {
     public void setPrice(BigDecimal price) {
         this.price = price;
     }
-    public MultipartFile getMainImage() {
+    public Object getMainImage() {
         return mainImage;
     }
-    public void setMainImage(MultipartFile mainImage) {
+    public void setMainImage(Object mainImage) {
         this.mainImage = mainImage;
     }
     public String getCategory() {

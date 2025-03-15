@@ -41,8 +41,8 @@ public class ProductController {
         return ResponseEntity.ok(new ResponseMessage(200, "Product has been created."));
     }
 
-    @PutMapping
-    public ResponseEntity<ResponseMessage> updateProduct(@RequestBody ProductDTO product) {
+    @PutMapping(consumes = "multipart/form-data")
+    public ResponseEntity<ResponseMessage> updateProduct(@ModelAttribute ProductRequestDTO product) throws IOException {
         productService.updateProduct(product);
         return ResponseEntity.ok(new ResponseMessage(200, "Product has been updated."));
     }

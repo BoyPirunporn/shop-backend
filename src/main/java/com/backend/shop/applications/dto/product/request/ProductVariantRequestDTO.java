@@ -7,7 +7,14 @@ import java.util.List;
 import com.backend.shop.applications.dto.product.ProductVariantOptionDTO;
 
 public class ProductVariantRequestDTO {
-     private BigDecimal price;
+    private Long id;
+     public Long getId() {
+        return id;
+    }
+    public void setId(Long id) {
+        this.id = id;
+    }
+    private BigDecimal price;
     private String sku;
     private Integer stock;
     private VariantImageRequestDTO variantImage;

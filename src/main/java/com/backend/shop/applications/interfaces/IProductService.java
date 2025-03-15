@@ -11,6 +11,6 @@ public interface IProductService {
     ProductDTO getProductById(Long id);
     List<ProductDTO> getAllProduct(int page,int size);
     void createProduct(ProductRequestDTO product) throws IOException;
-    void updateProduct(ProductDTO product);
+    void updateProduct(ProductRequestDTO product)  throws IOException;
     void deleteProduct(Long id);
 }
