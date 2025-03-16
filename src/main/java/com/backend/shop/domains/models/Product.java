@@ -1,6 +1,7 @@
 package com.backend.shop.domains.models;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,6 +15,12 @@ public class Product {
     private Category category;
     
     private List<ProductVariant> productVariants = new ArrayList<>();
+
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
+
+
+    
 
     public String getId() {
         return id;
@@ -69,5 +76,21 @@ public class Product {
 
     public void setProductVariants(List<ProductVariant> productVariants) {
         this.productVariants = productVariants;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
     }
 }

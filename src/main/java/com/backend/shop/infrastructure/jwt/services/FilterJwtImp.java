@@ -27,16 +27,15 @@ import jakarta.servlet.http.HttpServletResponse;
 @Service
 public class FilterJwtImp extends OncePerRequestFilter implements IFilterJwt {
 
-
     private static final List<String> EXCLUDED_URLS = List.of(
-        "/files/*",
-        "/api/v1/auth/*",
-        "/swagger-ui/*",
-        "/swagger-ui.html",
-        "/v3/api-docs/*",
-        "/api/v1/products/*"
-    );
-    
+            "/files/*",
+            "/api/v1/auth/*",
+            "/swagger-ui/*",
+            "/swagger-ui.html",
+            "/v3/api-docs/*",
+            "/api/v1/products/*",
+            "/api/v1/category/*");
+
     @Autowired
     @Qualifier("handlerExceptionResolver")
     private HandlerExceptionResolver resolver;
@@ -51,14 +50,13 @@ public class FilterJwtImp extends OncePerRequestFilter implements IFilterJwt {
         this.userDetailsService = userDetailsService;
         this.jwtService = jwtService;
     }
-    
+
     @Override
-    protected boolean shouldNotFilter(@SuppressWarnings("null") HttpServletRequest request) throws ServletException  {
+    protected boolean shouldNotFilter(@SuppressWarnings("null") HttpServletRequest request) throws ServletException {
         String path = request.getRequestURI();
-        System.out.println("MATCH : "+EXCLUDED_URLS.stream().anyMatch(path::matches));
+        System.out.println("MATCH : " + path + " " + EXCLUDED_URLS.stream().anyMatch(path::matches));
         return EXCLUDED_URLS.stream().anyMatch(path::matches);
     }
-
 
     @Override
     protected void doFilterInternal(
@@ -69,14 +67,10 @@ public class FilterJwtImp extends OncePerRequestFilter implements IFilterJwt {
 
         String uri = request.getRequestURI();
         System.out.println("URI " + uri);
-        // if (uri.startsWith("/swagger-ui")
-        //         || uri.startsWith("/v3/api-docs")
-        //         || uri.startsWith("/api/v1/auth")
-        //         || uri.startsWith("/api/v1/client")
-        //         || uri.startsWith("/files")) {
-        //     filterChain.doFilter(request, response);
-        //     return;
-        // }
+        if (uri.startsWith("/api/v1/auth")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
         String headerToken = request.getHeader("Authorization");
 
         if (isTokenInvalid(headerToken)) {
@@ -126,6 +120,5 @@ public class FilterJwtImp extends OncePerRequestFilter implements IFilterJwt {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'handleInvalidToken'");
     }
-
 
 }

@@ -1,8 +1,11 @@
 package com.backend.shop.applications.dto.product;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 public class ProductDTO {
     private Long id;
@@ -12,6 +15,13 @@ public class ProductDTO {
     private String mainImage;
     private String category;
     private List<ProductVariantDTO> productVariants = new ArrayList<>();
+
+    @JsonFormat(pattern = "dd/MM/yyyy")
+    private LocalDateTime createdAt;
+    @JsonFormat(pattern = "dd/MM/yyyy")
+    private LocalDateTime updatedAt;
+
+    
 
 
     public String getName() {
@@ -63,5 +73,17 @@ public class ProductDTO {
 
     public void setId(Long id) {
         this.id = id;
+    }
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
     }
 }

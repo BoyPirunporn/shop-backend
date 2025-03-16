@@ -2,10 +2,12 @@ package com.backend.shop.infrastructure.usecase;
 
 import java.util.List;
 
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.backend.shop.domains.models.Product;
+import com.backend.shop.domains.filter.ProductFilter;
 import com.backend.shop.domains.usecase.IProductUsecase;
 import com.backend.shop.infrastructure.entity.CategoryEntity;
 import com.backend.shop.infrastructure.entity.ProductEntity;
@@ -15,6 +17,7 @@ import com.backend.shop.infrastructure.exceptions.BaseException;
 import com.backend.shop.infrastructure.mapper.ProductEntityMapper;
 import com.backend.shop.infrastructure.repository.CategoryJpaRepository;
 import com.backend.shop.infrastructure.repository.ProductJpaRepository;
+import com.backend.shop.infrastructure.specification.product.ProductSpecification;
 
 import jakarta.transaction.Transactional;
 
@@ -26,7 +29,8 @@ public class ProductUsecase implements IProductUsecase {
 
     private final ProductEntityMapper productEntityMapper;
 
-    public ProductUsecase(ProductJpaRepository productJpaRepository, CategoryJpaRepository categoryJpaRepository, ProductEntityMapper productEntityMapper) {
+    public ProductUsecase(ProductJpaRepository productJpaRepository, CategoryJpaRepository categoryJpaRepository,
+            ProductEntityMapper productEntityMapper) {
         this.productJpaRepository = productJpaRepository;
         this.categoryJpaRepository = categoryJpaRepository;
         this.productEntityMapper = productEntityMapper;
@@ -37,7 +41,6 @@ public class ProductUsecase implements IProductUsecase {
     public void createProduct(Product product) {
         CategoryEntity category = categoryJpaRepository.findByNameContainingIgnoreCase(product.getCategory().getName())
                 .orElseThrow(() -> new BaseException("Category not found", HttpStatus.BAD_REQUEST));
-
 
         ProductEntity _product = productEntityMapper.toEntity(product);
         _product.setCategory(category);
@@ -53,10 +56,8 @@ public class ProductUsecase implements IProductUsecase {
             }
 
         }
-      productJpaRepository.save(_product);
+        productJpaRepository.save(_product);
     }
-
-
 
     @Override
     public void deleteProductById(Long id) {
@@ -64,8 +65,8 @@ public class ProductUsecase implements IProductUsecase {
     }
 
     @Override
-    public List<Product> getAllProducts(int page,int size) {
-       return productJpaRepository.findAll().stream().map(productEntityMapper::toModel).toList();
+    public List<Product> getAllProducts(int page, int size) {
+        return productJpaRepository.findAll().stream().map(productEntityMapper::toModel).toList();
     }
 
     @Override
@@ -76,6 +77,13 @@ public class ProductUsecase implements IProductUsecase {
     @Override
     public Product getProductById(Long id) {
         return productEntityMapper.toModel(productJpaRepository.findById(id).orElse(null));
+    }
+
+    @Override
+    public List<Product> filterProduct(ProductFilter filter) {
+        return productJpaRepository.findAll(
+                ProductSpecification.filterBy(filter),
+                PageRequest.of(filter.getPage(), filter.getSize())).stream().map(productEntityMapper::toModel).toList();
     }
 
 }

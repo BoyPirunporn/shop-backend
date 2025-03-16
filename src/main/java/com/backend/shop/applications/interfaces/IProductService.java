@@ -5,12 +5,20 @@ import java.util.List;
 
 import com.backend.shop.applications.dto.product.ProductDTO;
 import com.backend.shop.applications.dto.product.request.ProductRequestDTO;
+import com.backend.shop.domains.filter.ProductFilter;
 
 public interface IProductService {
     ProductDTO getProductByName(String name);
+
     ProductDTO getProductById(Long id);
-    List<ProductDTO> getAllProduct(int page,int size);
+
+    List<ProductDTO> getAllProduct(int page, int size);
+    List<ProductDTO> filterProduct(ProductFilter filter);
+
     void createProduct(ProductRequestDTO product) throws IOException;
-    void updateProduct(ProductRequestDTO product)  throws IOException;
+
+    void updateProduct(ProductRequestDTO product) throws IOException;
+
     void deleteProduct(Long id);
+
 }

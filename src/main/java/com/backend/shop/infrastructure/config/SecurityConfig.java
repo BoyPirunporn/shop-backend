@@ -27,12 +27,13 @@ public class SecurityConfig {
     }
 
     private String[] PUBLIC_ROUTE = {
-            "/files/*",
+            "/files/**",
             "/api/v1/auth/**",
             "/swagger-ui/**",
             "/swagger-ui.html", // ✅ เพิ่ม Swagger UI HTML
             "/v3/api-docs/**", // ✅ อนุญาต API Docs ทั้งหมด
-            "/api/v1/products/**"
+            "/api/v1/products/**",
+            "/api/v1/category/**",
     };
 
     @Bean

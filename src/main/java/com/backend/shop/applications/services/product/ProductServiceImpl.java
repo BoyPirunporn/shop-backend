@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.backend.shop.applications.mapper.ProductModelMapper;
 import com.backend.shop.domains.models.Product;
+import com.backend.shop.domains.filter.ProductFilter;
 import com.backend.shop.domains.models.ProductOptionValue;
 import com.backend.shop.domains.models.ProductVariant;
 import com.backend.shop.domains.models.ProductVariantOption;
@@ -113,6 +114,12 @@ public class ProductServiceImpl implements IProductService {
         productModel.setProductVariants(productVariants);
 
         productUsecase.createProduct(productModel);
+    }
+
+    @Override
+    public List<ProductDTO> filterProduct(ProductFilter filter){
+
+        return productUsecase.filterProduct(filter).stream().map(productModelMapper::toDTO).toList();
     }
 
     private List<ProductVariant> createProductVariants(List<ProductVariantRequestDTO> productVariantDTOs,

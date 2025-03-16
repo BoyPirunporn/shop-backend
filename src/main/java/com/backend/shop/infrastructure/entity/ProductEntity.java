@@ -8,6 +8,7 @@ import jakarta.persistence.*;
 
 @Entity(name = "products")
 public class ProductEntity extends BaseEntity {
+    @Column(unique = true)
     private String name;
     private String description;
     private BigDecimal price;
