@@ -24,7 +24,6 @@ public class UsersEntity extends BaseEntity implements UserDetails {
     private String password;
 
     @Enumerated(EnumType.STRING)
-    @ElementCollection(fetch = FetchType.EAGER)
     private Set<ERole> roles = new HashSet<>();
 
     public String getEmail() {

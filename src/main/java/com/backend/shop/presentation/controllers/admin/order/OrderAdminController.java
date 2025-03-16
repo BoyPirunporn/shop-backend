@@ -1,4 +1,4 @@
-package com.backend.shop.presentation.controllers.order;
+package com.backend.shop.presentation.controllers.admin.order;
 
 import java.util.List;
 
@@ -19,14 +19,17 @@ import com.backend.shop.applications.interfaces.IOrderService;
 import com.backend.shop.domains.ResponseMessage;
 import com.backend.shop.domains.ResponseWithPayload;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 
 @RestController
-@RequestMapping("${application.api.prefix}/orders")
-public class OrderController {
+@Tag(name = "Order Admin Controller")
+@RequestMapping("${application.api.prefix}/admin/orders")
+public class OrderAdminController {
     
     private final IOrderService orderService;
 
-    public OrderController(IOrderService orderService) {
+    public OrderAdminController(IOrderService orderService) {
         this.orderService = orderService;
     }
 

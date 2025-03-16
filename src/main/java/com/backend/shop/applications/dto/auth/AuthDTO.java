@@ -19,7 +19,7 @@ public class AuthDTO {
     @Size(min = 8, message = "Password must be at least 8 characters")
     private String password;
 
-    @RoleValidator(message = "Role must be [ ROLE_USER, ROLE_ADMIN, ROLE_SUPER_ADMIN ]")
+    @RoleValidator(message = "Role must be [ USER, ADMIN, SUPER_ADMIN ]")
     private Set<ERole> roles = new HashSet<>();
 
     public String getEmail() {

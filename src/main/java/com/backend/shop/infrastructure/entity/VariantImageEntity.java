@@ -1,7 +1,5 @@
 package com.backend.shop.infrastructure.entity;
 
-import com.backend.shop.domains.models.ProductVariant;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;

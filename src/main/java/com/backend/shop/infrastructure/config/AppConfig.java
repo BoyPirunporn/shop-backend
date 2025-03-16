@@ -27,6 +27,7 @@ public class AppConfig {
         this.userJapRepoitory = userJapRepoitory;
     }
 
+
     @Bean
     UserDetailsService userDetailsService() {
         return u -> (UserDetails) userJapRepoitory.findByEmail(u)

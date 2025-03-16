@@ -1,6 +1,7 @@
 package com.backend.shop.infrastructure.jwt.services;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -26,6 +27,16 @@ import jakarta.servlet.http.HttpServletResponse;
 @Service
 public class FilterJwtImp extends OncePerRequestFilter implements IFilterJwt {
 
+
+    private static final List<String> EXCLUDED_URLS = List.of(
+        "/files/*",
+        "/api/v1/auth/*",
+        "/swagger-ui/*",
+        "/swagger-ui.html",
+        "/v3/api-docs/*",
+        "/api/v1/products/*"
+    );
+    
     @Autowired
     @Qualifier("handlerExceptionResolver")
     private HandlerExceptionResolver resolver;
@@ -40,18 +51,32 @@ public class FilterJwtImp extends OncePerRequestFilter implements IFilterJwt {
         this.userDetailsService = userDetailsService;
         this.jwtService = jwtService;
     }
+    
+    @Override
+    protected boolean shouldNotFilter(@SuppressWarnings("null") HttpServletRequest request) throws ServletException  {
+        String path = request.getRequestURI();
+        System.out.println("MATCH : "+EXCLUDED_URLS.stream().anyMatch(path::matches));
+        return EXCLUDED_URLS.stream().anyMatch(path::matches);
+    }
+
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+    protected void doFilterInternal(
+            @SuppressWarnings("null") HttpServletRequest request,
+            @SuppressWarnings("null") HttpServletResponse response,
+            @SuppressWarnings("null") FilterChain filterChain)
             throws ServletException, IOException {
 
         String uri = request.getRequestURI();
-        System.out.println("URI "+uri);
-        System.out.println(uri.startsWith("/files"));
-        if (uri.startsWith("/swagger-ui") || uri.startsWith("/v3/api-docs") || uri.startsWith("/api/v1/auth") ||  uri.startsWith("/files")) {
-            filterChain.doFilter(request, response);
-            return;
-        }
+        System.out.println("URI " + uri);
+        // if (uri.startsWith("/swagger-ui")
+        //         || uri.startsWith("/v3/api-docs")
+        //         || uri.startsWith("/api/v1/auth")
+        //         || uri.startsWith("/api/v1/client")
+        //         || uri.startsWith("/files")) {
+        //     filterChain.doFilter(request, response);
+        //     return;
+        // }
         String headerToken = request.getHeader("Authorization");
 
         if (isTokenInvalid(headerToken)) {
@@ -98,7 +123,9 @@ public class FilterJwtImp extends OncePerRequestFilter implements IFilterJwt {
 
     @Override
     public void handleInvalidToken(HttpServletRequest request, HttpServletResponse response) {
-        resolver.resolveException(request, response, null, new JwtException("Invalid Token", HttpStatus.UNAUTHORIZED));
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'handleInvalidToken'");
     }
+
 
 }

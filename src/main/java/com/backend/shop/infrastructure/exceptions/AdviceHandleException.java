@@ -1,5 +1,6 @@
 package com.backend.shop.infrastructure.exceptions;
 
+import java.nio.file.AccessDeniedException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -57,6 +58,14 @@ public class AdviceHandleException {
         adviceHandler.setMessage(ex.getMessage());
         adviceHandler.setStatus(500);
         return new ResponseEntity<>(adviceHandler, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<IAdviceHandler> accessDenied(AccessDeniedException ex){
+        IAdviceHandler adviceHandler = new IAdviceHandler();
+        System.out.println("RES ADVICE : ");
+        adviceHandler.setMessage(ex.getMessage());
+        adviceHandler.setStatus(403);
+        return new ResponseEntity<>(adviceHandler, HttpStatus.FORBIDDEN);
     }
    
     public class IAdviceHandler {

@@ -1,22 +1,33 @@
-package com.backend.shop.presentation.controllers.category;
+package com.backend.shop.presentation.controllers.admin.category;
+
+import java.util.List;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.backend.shop.applications.dto.category.CategoryDTO;
 import com.backend.shop.applications.interfaces.ICategoryService;
 import com.backend.shop.domains.ResponseMessage;
 import com.backend.shop.domains.ResponseWithPayload;
-import com.backend.shop.domains.models.Category;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
-@RequestMapping("${application.api.prefix}/category")
-public class CategoryController {
+@Tag(name = "Category Admin Controller")
+@RequestMapping("${application.api.prefix}/admin/category")
+public class CategoryAdminController {
 
     private final ICategoryService categoryService;
 
-    public CategoryController(ICategoryService categoryService) {
+    public CategoryAdminController(ICategoryService categoryService) {
         this.categoryService = categoryService;
     }
     @GetMapping("{id}")

@@ -1,7 +1,10 @@
-package com.backend.shop.presentation.controllers.product.productOption;
+package com.backend.shop.presentation.controllers.admin.product.productOption;
 
 import com.backend.shop.domains.ResponseMessage;
 import com.backend.shop.domains.ResponseWithPayload;
+
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,12 +15,13 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping("${application.api.prefix}/product-options")
-public class ProductOptionController {
+@Tag(name = "Product Option Admin Controller")
+@RequestMapping("${application.api.prefix}/admin/product-options")
+public class ProductOptionAdminController {
     
     private final IProductOptionService productOptionService;
 
-    public ProductOptionController(IProductOptionService productOptionService){
+    public ProductOptionAdminController(IProductOptionService productOptionService){
         this.productOptionService = productOptionService;
     }
 
