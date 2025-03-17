@@ -22,11 +22,9 @@ public class FileServiceImpl implements IFileService {
     }
 
     @Override
-    public String createPath(MultipartFile file) throws IOException {
+    public String createPath(MultipartFile file,String savePath) throws IOException {
         final String pathFile = fileStoreProperties.getFileStore(); // พาธที่มาจาก properties
-        UUID uuid = UUID.randomUUID(); // สร้าง UUID สำหรับไฟล์
-        String fileName = file.getOriginalFilename(); // ชื่อไฟล์ที่ถูกอัปโหลด
-        String pathToFile = Paths.get("product", uuid.toString(), fileName).toString();
+        String pathToFile = Paths.get(savePath).toString();
         String pathName = Paths.get(pathFile, pathToFile).toString(); // สร้างพาธแบบสมบูรณ์
         
         Path destination = Paths.get(pathName);

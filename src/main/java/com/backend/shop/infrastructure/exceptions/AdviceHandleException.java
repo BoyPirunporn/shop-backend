@@ -18,6 +18,7 @@ public class AdviceHandleException {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, Object>> handleValidationExceptions(
             MethodArgumentNotValidException ex) {
+        ex.printStackTrace();
         Map<String, Object> errors = new HashMap<>();
 
         Map<String, String> paths = new HashMap<>();
@@ -52,22 +53,23 @@ public class AdviceHandleException {
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<IAdviceHandler> throwException(Exception ex){
+    public ResponseEntity<IAdviceHandler> throwException(Exception ex) {
         IAdviceHandler adviceHandler = new IAdviceHandler();
         ex.printStackTrace();
         adviceHandler.setMessage(ex.getMessage());
         adviceHandler.setStatus(500);
         return new ResponseEntity<>(adviceHandler, HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
     @ExceptionHandler(AccessDeniedException.class)
-    public ResponseEntity<IAdviceHandler> accessDenied(AccessDeniedException ex){
+    public ResponseEntity<IAdviceHandler> accessDenied(AccessDeniedException ex) {
         IAdviceHandler adviceHandler = new IAdviceHandler();
-        System.out.println("RES ADVICE : ");
+        ex.printStackTrace();
         adviceHandler.setMessage(ex.getMessage());
         adviceHandler.setStatus(403);
         return new ResponseEntity<>(adviceHandler, HttpStatus.FORBIDDEN);
     }
-   
+
     public class IAdviceHandler {
         String message;
         int status;

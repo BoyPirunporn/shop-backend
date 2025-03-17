@@ -1,5 +1,7 @@
 package com.backend.shop.infrastructure.mapper;
 
+import java.util.List;
+
 import org.mapstruct.Mapper;
 
 import com.backend.shop.domains.models.Category;
@@ -10,7 +12,12 @@ import org.mapstruct.Mapping;
 public interface CategoryEntityMapper {
 
     @Mapping(target = "products", ignore = true)
+    @Mapping(target = "parent",ignore = true)
     Category toModel(CategoryEntity categoryEntity);
+
+
     @Mapping(target = "products", ignore = true)
+    @Mapping(target = "parent",ignore = true)
     CategoryEntity toEntity(Category category);
+
 }

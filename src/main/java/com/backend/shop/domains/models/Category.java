@@ -6,6 +6,38 @@ import java.util.List;
 public class Category {
     private Long id;
     private String name;
+    private String imageUrl;
+    private Category parent;
+    private List<Category> children;
+
+    
+    public Category() {
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public Category getParent() {
+        return parent;
+    }
+
+    public void setParent(Category parent) {
+        this.parent = parent;
+    }
+
+    public List<Category> getChildren() {
+        return children;
+    }
+
+    public void setChildren(List<Category> children) {
+        this.children = children;
+    }
+
     private List<Product> products = new ArrayList<>();
 
     

@@ -1,10 +1,13 @@
 package com.backend.shop.presentation.controllers.admin.category;
 
+import java.io.IOException;
 import java.util.List;
 
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -14,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.backend.shop.applications.dto.category.CategoryDTO;
+import com.backend.shop.applications.dto.category.request.CategoryRequest;
 import com.backend.shop.applications.interfaces.ICategoryService;
 import com.backend.shop.domains.ResponseMessage;
 import com.backend.shop.domains.ResponseWithPayload;
@@ -42,8 +46,8 @@ public class CategoryAdminController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping
-    public ResponseEntity<ResponseMessage> createCategory(@RequestBody CategoryDTO category){
+    @PostMapping(consumes = "multipart/form-data")
+    public ResponseEntity<ResponseMessage> createCategory(@ModelAttribute CategoryRequest category) throws IOException{
         categoryService.createCategory(category);
         ResponseMessage response = new ResponseMessage();
         response.setStatus(200);

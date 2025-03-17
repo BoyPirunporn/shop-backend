@@ -1,8 +1,10 @@
 package com.backend.shop.applications.services.product;
 
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import com.backend.shop.applications.mapper.ProductModelMapper;
 import com.backend.shop.domains.models.Product;
@@ -62,8 +64,6 @@ public class ProductServiceImpl implements IProductService {
         return productUsecase.getAllProducts(page, size).stream().map(productModelMapper::toDTO).toList();
     }
 
-
-
     @Override
     public void deleteProduct(Long id) {
         productUsecase.deleteProductById(id);
@@ -76,8 +76,10 @@ public class ProductServiceImpl implements IProductService {
 
         if (product.getMainImage() instanceof MultipartFile) {
             MultipartFile mainImage = (MultipartFile) product.getMainImage();
+            UUID uid = UUID.randomUUID();
             // สร้าง path สำหรับ main image
-            String pathFile = fileService.createPath(mainImage);
+            String pathFile = fileService.createPath(mainImage,
+                    Paths.get("product", uid.toString(), mainImage.getOriginalFilename()).toString());
             productModel.setMainImage(pathFile);
         } else {
             productModel.setMainImage((String) product.getMainImage());
@@ -98,11 +100,12 @@ public class ProductServiceImpl implements IProductService {
     public void updateProduct(ProductRequestDTO product) throws IOException {
         Product productModel = productModelMapper.toModel(product);
         System.out.println("SIZE : " + product.getProductVariants().size());
-
+        UUID uid = UUID.randomUUID();
         if (product.getMainImage() instanceof MultipartFile) {
             MultipartFile mainImage = (MultipartFile) product.getMainImage();
             // สร้าง path สำหรับ main image
-            String pathFile = fileService.createPath(mainImage);
+            String pathFile = fileService.createPath(mainImage,
+                    Paths.get("product", uid.toString(), mainImage.getOriginalFilename()).toString());
             productModel.setMainImage(pathFile);
         } else {
             productModel.setMainImage((String) product.getMainImage());
@@ -117,7 +120,7 @@ public class ProductServiceImpl implements IProductService {
     }
 
     @Override
-    public List<ProductDTO> filterProduct(ProductFilter filter){
+    public List<ProductDTO> filterProduct(ProductFilter filter) {
 
         return productUsecase.filterProduct(filter).stream().map(productModelMapper::toDTO).toList();
     }
@@ -170,15 +173,17 @@ public class ProductServiceImpl implements IProductService {
         VariantImage variantImage = new VariantImage();
         variantImage.setId(productVariantDTO.getVariantImage().getId());
         variantImage.setProductVariant(productVariant);
-        
-        Object url = productVariantDTO.getVariantImage().getUrl();
 
+        Object url = productVariantDTO.getVariantImage().getUrl();
+        UUID uid = UUID.randomUUID();
         if (url instanceof MultipartFile) {
+            MultipartFile file = (MultipartFile) url;
             // สร้าง path สำหรับ variant image
-            String pathFileVariant = fileService.createPath((MultipartFile)url);
+            String pathFileVariant = fileService.createPath((MultipartFile) url,
+                    Paths.get("product", uid.toString(), file.getOriginalFilename()).toString());
             variantImage.setUrl(pathFileVariant);
-        }else{
-            variantImage.setUrl((String)url);
+        } else {
+            variantImage.setUrl((String) url);
         }
 
         // ตั้งค่า variantImage ให้กับ productVariant
