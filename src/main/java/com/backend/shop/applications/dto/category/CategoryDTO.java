@@ -6,13 +6,14 @@ public class CategoryDTO {
     private Long id;
     private String name;
     private String imageUrl;
-    private Long parentId;
-    public Long getParentId() {
-        return parentId;
+    private CategoryDTO parent;
+
+    public CategoryDTO getParent() {
+        return parent;
     }
 
-    public void setParentId(Long parentId) {
-        this.parentId = parentId;
+    public void setParent(CategoryDTO parent) {
+        this.parent = parent;
     }
 
     private List<CategoryDTO> children;

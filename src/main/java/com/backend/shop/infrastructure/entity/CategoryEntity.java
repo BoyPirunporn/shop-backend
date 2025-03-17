@@ -3,8 +3,10 @@ package com.backend.shop.infrastructure.entity;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 @Entity
@@ -16,13 +18,21 @@ public class CategoryEntity extends BaseEntity {
     private String imageUrl;
     @ManyToOne
     @JoinColumn(name = "parent_id")
+    @JsonIgnore
     private CategoryEntity parent;
 
-    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<CategoryEntity> children = new ArrayList<>();
+    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<CategoryEntity> children;
     @JsonIgnore
     @OneToMany(mappedBy = "category")
     private List<ProductEntity> products;
+
+    public CategoryEntity(){}
+    public CategoryEntity(Long id,String name, String imageUrl) {
+        super.setId(id);
+        this.name = name;
+        this.imageUrl = imageUrl;
+    }
 
     public String getImageUrl() {
         return imageUrl;

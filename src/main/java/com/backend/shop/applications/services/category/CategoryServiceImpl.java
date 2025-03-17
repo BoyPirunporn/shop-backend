@@ -39,7 +39,6 @@ public class CategoryServiceImpl implements ICategoryService {
         model.setName(req.getName());
         if (req.getImageUrl() != null && req.getImageUrl() instanceof MultipartFile) {
             String saveFile = uploadImage((MultipartFile) req.getImageUrl());
-            System.out.println("SAVE PATH MAIN : " + saveFile);
             model.setImageUrl(saveFile);
         }
         List<Category> children = Optional.ofNullable(req.getChildren())
@@ -60,6 +59,7 @@ public class CategoryServiceImpl implements ICategoryService {
 
     @Override
     public List<CategoryDTO> getAllCategory(int page, int size) {
+        List<Category> categories = categoryUsecase.getAllCategory(page, size);
         return categoryUsecase.getAllCategory(page, size).stream().map(categoryMapper::toDTO).toList();
     }
 

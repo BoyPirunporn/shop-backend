@@ -32,23 +32,16 @@ public class CategoryUsecase implements ICategoryusecase {
        
         CategoryEntity categoryEntity = categoryEntityMapper.toEntity(category);
 
-        for (CategoryEntity c : categoryEntity.getChildren()) {
-            c.setParent(categoryEntity);
-        }
-        System.out.println(categoryEntity.getChildren().get(0).getParent().getName());
-        categoryRepository.save(categoryEntityMapper.toEntity(category));
+       if(!category.getChildren().isEmpty()){
+           System.out.println("SUB CATE : "+categoryEntity.getChildren().get(0).getName());
+           for (CategoryEntity c : categoryEntity.getChildren()) {
+               c.setParent(categoryEntity);
+           }
+       }
+        categoryRepository.save(categoryEntity);
     }
 
-    /**
-     * แปลง CategoryRequest เป็น CategoryDTO
-     */
-    private Category mapToCategory(Category category) {
-        Category model = new Category();
-        model.setName(category.getName());
-        model.setParent(category.getParent());
-        model.setImageUrl(category.getImageUrl());
-        return model;
-    }
+
 
     @Override
     public void updateCategory(Category category) {
