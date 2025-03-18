@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.backend.shop.applications.dto.product.ProductDTO;
 import com.backend.shop.applications.interfaces.IProductService;
 import com.backend.shop.domains.ResponseWithPayload;
-import com.backend.shop.domains.filter.ProductFilter;
+import com.backend.shop.domains.datatable.DataTableFilter;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 
@@ -27,7 +27,7 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<ResponseWithPayload<List<ProductDTO>>> getNewProduct(@ModelAttribute ProductFilter filter) {
+    public ResponseEntity<ResponseWithPayload<List<ProductDTO>>> getNewProduct(@ModelAttribute DataTableFilter filter) {
         return ResponseEntity.ok(new ResponseWithPayload<>(200, productService.filterProduct(filter)));
     }
 }

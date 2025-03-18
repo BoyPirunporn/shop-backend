@@ -8,7 +8,7 @@ import java.util.UUID;
 
 import com.backend.shop.applications.mapper.ProductModelMapper;
 import com.backend.shop.domains.models.Product;
-import com.backend.shop.domains.filter.ProductFilter;
+import com.backend.shop.domains.datatable.DataTableFilter;
 import com.backend.shop.domains.models.ProductOptionValue;
 import com.backend.shop.domains.models.ProductVariant;
 import com.backend.shop.domains.models.ProductVariantOption;
@@ -120,7 +120,7 @@ public class ProductServiceImpl implements IProductService {
     }
 
     @Override
-    public List<ProductDTO> filterProduct(ProductFilter filter) {
+    public List<ProductDTO> filterProduct(DataTableFilter filter) {
 
         return productUsecase.filterProduct(filter).stream().map(productModelMapper::toDTO).toList();
     }

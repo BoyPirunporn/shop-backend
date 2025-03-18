@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.backend.shop.applications.dto.category.CategoryDTO;
 import com.backend.shop.applications.interfaces.ICategoryService;
 import com.backend.shop.domains.ResponseWithPayload;
-import com.backend.shop.domains.filter.FilterCategory;
+import com.backend.shop.domains.datatable.FilterCategory;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 

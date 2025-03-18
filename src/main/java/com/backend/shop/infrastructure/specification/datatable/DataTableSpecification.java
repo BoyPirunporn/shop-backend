@@ -1,12 +1,12 @@
-package com.backend.shop.infrastructure.specification.product;
+package com.backend.shop.infrastructure.specification.datatable;
 
+import com.backend.shop.infrastructure.entity.BaseEntity;
 import org.springframework.data.jpa.domain.Specification;
 
-import com.backend.shop.domains.filter.ProductFilter;
-import com.backend.shop.infrastructure.entity.ProductEntity;
+import com.backend.shop.domains.datatable.DataTableFilter;
 
-public class ProductSpecification {
-     public static Specification<ProductEntity> filterBy(ProductFilter filter) {
+public class DataTableSpecification<T extends BaseEntity> {
+     public static <T> Specification<T> filterBy(DataTableFilter filter) {
         return (root, query, criteriaBuilder) -> {
             // Filter by other criteria (if any)
             

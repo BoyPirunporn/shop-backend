@@ -3,11 +3,12 @@ package com.backend.shop.infrastructure.usecase;
 import java.util.List;
 
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.backend.shop.domains.models.Product;
-import com.backend.shop.domains.filter.ProductFilter;
+import com.backend.shop.domains.datatable.DataTableFilter;
 import com.backend.shop.domains.usecase.IProductUsecase;
 import com.backend.shop.infrastructure.entity.CategoryEntity;
 import com.backend.shop.infrastructure.entity.ProductEntity;
@@ -17,7 +18,7 @@ import com.backend.shop.infrastructure.exceptions.BaseException;
 import com.backend.shop.infrastructure.mapper.ProductEntityMapper;
 import com.backend.shop.infrastructure.repository.CategoryJpaRepository;
 import com.backend.shop.infrastructure.repository.ProductJpaRepository;
-import com.backend.shop.infrastructure.specification.product.ProductSpecification;
+import com.backend.shop.infrastructure.specification.datatable.DataTableSpecification;
 
 import jakarta.transaction.Transactional;
 
@@ -80,9 +81,10 @@ public class ProductUsecase implements IProductUsecase {
     }
 
     @Override
-    public List<Product> filterProduct(ProductFilter filter) {
+    public List<Product> filterProduct(DataTableFilter filter) {
+        Specification<ProductEntity> spec = DataTableSpecification.filterBy(filter);
         return productJpaRepository.findAll(
-                ProductSpecification.filterBy(filter),
+                spec,
                 PageRequest.of(filter.getPage(), filter.getSize())).stream().map(productEntityMapper::toModel).toList();
     }
 
