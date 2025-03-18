@@ -6,6 +6,7 @@ import java.util.List;
 import com.backend.shop.applications.dto.product.ProductDTO;
 import com.backend.shop.applications.dto.product.request.ProductRequestDTO;
 import com.backend.shop.domains.datatable.DataTableFilter;
+import com.backend.shop.domains.datatable.ResponseDataTable;
 
 public interface IProductService {
     ProductDTO getProductByName(String name);
@@ -13,7 +14,7 @@ public interface IProductService {
     ProductDTO getProductById(Long id);
 
     List<ProductDTO> getAllProduct(int page, int size);
-    List<ProductDTO> filterProduct(DataTableFilter filter);
+    ResponseDataTable<ProductDTO> filterProduct(DataTableFilter filter);
 
     void createProduct(ProductRequestDTO product) throws IOException;
 

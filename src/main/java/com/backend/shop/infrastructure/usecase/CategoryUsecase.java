@@ -2,6 +2,7 @@ package com.backend.shop.infrastructure.usecase;
 
 import java.util.List;
 
+import com.backend.shop.domains.datatable.DataTableFilter;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -59,8 +60,13 @@ public class CategoryUsecase implements ICategoryusecase {
     }
 
     @Override
-    public List<Category> getAllCategory(int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
+    public List<Category> getAllCategory(DataTableFilter filter) {
+        Pageable pageable = PageRequest.of(filter.getPage(), filter.getSize());
         return categoryRepository.findAll(pageable).stream().map(categoryEntityMapper::toModel).toList();
+    }
+
+    @Override
+    public Long countCategory() {
+        return categoryRepository.count();
     }
 }

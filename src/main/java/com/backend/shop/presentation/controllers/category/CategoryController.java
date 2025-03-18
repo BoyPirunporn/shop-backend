@@ -1,7 +1,9 @@
 package com.backend.shop.presentation.controllers.category;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import com.backend.shop.domains.datatable.DataTableFilter;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -28,7 +30,7 @@ public class CategoryController {
 
 
     @GetMapping
-    public ResponseEntity<ResponseWithPayload<List<CategoryDTO>>> filterCategory(@ModelAttribute FilterCategory filter) {
-        return ResponseEntity.ok(new ResponseWithPayload<>(200, categoryService.getAllCategory(filter.getPage(), filter.getSize())));
+    public ResponseEntity<ResponseWithPayload<List<CategoryDTO>>> filterCategory(@ModelAttribute DataTableFilter filter) {
+        return ResponseEntity.ok(new ResponseWithPayload<>(200,new ArrayList<>()));
     }
 }

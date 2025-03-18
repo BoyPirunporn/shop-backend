@@ -88,4 +88,10 @@ public class ProductUsecase implements IProductUsecase {
                 PageRequest.of(filter.getPage(), filter.getSize())).stream().map(productEntityMapper::toModel).toList();
     }
 
+
+    @Override
+    public Long countProduct(){
+        return productJpaRepository.count();
+    }
+
 }

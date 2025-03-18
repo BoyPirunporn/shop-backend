@@ -12,4 +12,5 @@ public interface IProductUsecase {
     Product getProductById(Long id);
     void createProduct(Product product);
     void deleteProductById(Long id);
+    Long countProduct();
 }

@@ -8,6 +8,8 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import com.backend.shop.domains.datatable.DataTableFilter;
+import com.backend.shop.domains.datatable.ResponseDataTable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -58,9 +60,10 @@ public class CategoryServiceImpl implements ICategoryService {
     }
 
     @Override
-    public List<CategoryDTO> getAllCategory(int page, int size) {
-        List<Category> categories = categoryUsecase.getAllCategory(page, size);
-        return categoryUsecase.getAllCategory(page, size).stream().map(categoryMapper::toDTO).toList();
+    public ResponseDataTable<CategoryDTO> getAllCategory(DataTableFilter filter) {
+        List<CategoryDTO> categories = categoryUsecase.getAllCategory(filter).stream().map(categoryMapper::toDTO).toList();
+        Long count = categoryUsecase.countCategory();
+        return new ResponseDataTable<>(200,categories,count,filter.getPage(),filter.getSize());
     }
 
     @Override

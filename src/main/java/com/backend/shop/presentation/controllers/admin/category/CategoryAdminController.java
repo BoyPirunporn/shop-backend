@@ -3,6 +3,8 @@ package com.backend.shop.presentation.controllers.admin.category;
 import java.io.IOException;
 import java.util.List;
 
+import com.backend.shop.domains.datatable.DataTableFilter;
+import com.backend.shop.domains.datatable.ResponseDataTable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -39,11 +41,8 @@ public class CategoryAdminController {
         return ResponseEntity.ok(new ResponseWithPayload<>(200,null));
     }
     @GetMapping
-    public ResponseEntity<ResponseWithPayload<List<CategoryDTO>>> getAllCategory(@RequestParam(name = "page") int page, @RequestParam int size){
-        ResponseWithPayload<List<CategoryDTO>> response = new ResponseWithPayload<>();
-        response.setPayload(categoryService.getAllCategory(page,size));
-        response.setStatus(200);
-        return ResponseEntity.ok(response);
+    public ResponseEntity<ResponseDataTable<CategoryDTO>> getAllCategory(@ModelAttribute DataTableFilter filter){
+        return ResponseEntity.ok(categoryService.getAllCategory(filter));
     }
 
     @PostMapping(consumes = "multipart/form-data")

@@ -3,10 +3,7 @@ package com.backend.shop.presentation.controllers.product;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.backend.shop.applications.dto.product.ProductDTO;
 import com.backend.shop.applications.interfaces.IProductService;
@@ -27,7 +24,7 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<ResponseWithPayload<List<ProductDTO>>> getNewProduct(@ModelAttribute DataTableFilter filter) {
-        return ResponseEntity.ok(new ResponseWithPayload<>(200, productService.filterProduct(filter)));
+    public ResponseEntity<ResponseWithPayload<List<ProductDTO>>> getNewProduct(@RequestParam int page,@RequestParam int size) {
+        return ResponseEntity.ok(new ResponseWithPayload<>(200, productService.getAllProduct(page,size)));
     }
 }

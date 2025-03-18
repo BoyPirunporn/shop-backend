@@ -3,6 +3,8 @@ package com.backend.shop.presentation.controllers.admin.product;
 import com.backend.shop.domains.ResponseMessage;
 import com.backend.shop.domains.ResponseWithPayload;
 
+import com.backend.shop.domains.datatable.DataTableFilter;
+import com.backend.shop.domains.datatable.ResponseDataTable;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 import org.springframework.http.ResponseEntity;
@@ -33,10 +35,8 @@ public class ProductAdminController {
     }
 
     @GetMapping
-    public ResponseEntity<ResponseWithPayload<List<ProductDTO>>> getAll(@RequestParam int page,
-            @RequestParam int size) {
-        List<ProductDTO> productDTOS = productService.getAllProduct(page, size);
-        return ResponseEntity.ok(new ResponseWithPayload<>(200, productDTOS));
+    public ResponseEntity<ResponseDataTable<ProductDTO>> getAll(@ModelAttribute DataTableFilter filter) {
+        return ResponseEntity.ok(productService.filterProduct(filter));
     }
 
     @PostMapping(consumes = "multipart/form-data")

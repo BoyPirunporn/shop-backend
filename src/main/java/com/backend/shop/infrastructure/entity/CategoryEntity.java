@@ -10,9 +10,11 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "category")
+@Table(name = "category",uniqueConstraints = @UniqueConstraint(
+        columnNames = {"parent_id","name"}
+))
 public class CategoryEntity extends BaseEntity {
-    @Column(name = "name", unique = true)
+    @Column(name = "name", nullable = false)
     private String name;
 
     private String imageUrl;
