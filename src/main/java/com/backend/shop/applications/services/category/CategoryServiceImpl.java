@@ -10,6 +10,8 @@ import java.util.stream.Collectors;
 
 import com.backend.shop.domains.datatable.DataTableFilter;
 import com.backend.shop.domains.datatable.ResponseDataTable;
+import com.backend.shop.infrastructure.exceptions.BaseException;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -35,35 +37,17 @@ public class CategoryServiceImpl implements ICategoryService {
         this.fileService = fileService;
     }
 
-    @Override
-    public void createCategory(CategoryRequest req) throws IOException{
-        Category model = new Category();
-        model.setName(req.getName());
-        if (req.getImageUrl() != null && req.getImageUrl() instanceof MultipartFile) {
-            String saveFile = uploadImage((MultipartFile) req.getImageUrl());
-            model.setImageUrl(saveFile);
-        }
-        List<Category> children = Optional.ofNullable(req.getChildren())
-                .orElse(Collections.emptyList()) // ป้องกัน NullPointerException
-                .stream()
-                .map(t -> {
-                    try {
-                        return mapToCategory(t,model);
-                    } catch (IOException e) {
-                        throw new RuntimeException("Error processing category child", e);
-                    }
-                }) // ใช้เมธอดช่วย
-                .collect(Collectors.toList());
-        model.setChildren(children);
-        categoryUsecase.createCategory(model);
-
-    }
 
     @Override
     public ResponseDataTable<CategoryDTO> getAllCategory(DataTableFilter filter) {
         List<CategoryDTO> categories = categoryUsecase.getAllCategory(filter).stream().map(categoryMapper::toDTO).toList();
         Long count = categoryUsecase.countCategory();
         return new ResponseDataTable<>(200,categories,count,filter.getPage(),filter.getSize());
+    }
+
+    @Override
+    public CategoryDTO getCategoryById(Long id) {
+        return categoryMapper.toDTO(categoryUsecase.getCategoryById(id));
     }
 
     @Override
@@ -76,22 +60,60 @@ public class CategoryServiceImpl implements ICategoryService {
         categoryUsecase.deleteCategory(id);
     }
 
+
+    @Override
+    public void createCategory(CategoryRequest req) throws IOException{
+        Category model = mapToCategory(req, null);
+        categoryUsecase.createCategory(model);
+
+    }
+
+    @Override
+    public void updateCategory(CategoryRequest category) throws IOException {
+      try{
+          Category parent = null;
+          if(category.getParentId()!= null){
+              parent = categoryUsecase.getByParentId(category.getParentId()).orElseThrow(() -> new BaseException("Parent not found",HttpStatus.BAD_REQUEST));
+          }
+          Category model = mapToCategory(category, parent);
+          categoryUsecase.createCategory(model);
+      }catch (BaseException ex){
+          throw new BaseException(ex.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
+      }
+    }
+
+
     /**
-     * แปลง CategoryRequest เป็น CategoryDTO
+     * แปลง CategoryRequest เป็น Category
      */
-    private Category mapToCategory(CategoryRequest req,Category model) throws IOException {
+    private Category mapToCategory(CategoryRequest req, Category parent) throws IOException {
         Category cate = new Category();
+        cate.setId(req.getId());
         cate.setName(req.getName());
-        cate.setParent(model);
+        cate.setParent(parent);
+        // ตรวจสอบ children และ map พวกมัน
+        List<Category> children = Optional.ofNullable(req.getChildren())
+                .orElse(Collections.emptyList()) // ป้องกัน NPE
+                .stream()
+                .map(childReq -> {
+                    try {
+                        return mapToCategory(childReq, cate); // Recursion พร้อมส่ง parent ที่ถูกต้อง
+                    } catch (IOException e) {
+                        throw new RuntimeException("Error processing category child", e);
+                    }
+                })
+                .collect(Collectors.toList());
+
+        cate.setChildren(children); // กำหนด children ให้ category
 
         if (req.getImageUrl() instanceof MultipartFile) {
             String saveFile = uploadImage((MultipartFile) req.getImageUrl());
             System.out.println("SAVE PATH MAIN : " + saveFile);
             cate.setImageUrl(saveFile);
         }
+
         return cate;
     }
-
     /**
      * อัปโหลดรูปภาพและคืนค่า URL
      */

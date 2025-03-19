@@ -10,7 +10,9 @@ import com.backend.shop.domains.datatable.ResponseDataTable;
 
 public interface ICategoryService {
     void createCategory(CategoryRequest category) throws IOException;
+    void updateCategory(CategoryRequest category) throws IOException;
     void updateCategory(CategoryDTO categoryDTO);
     void deleteCategory(Long id);
     ResponseDataTable<CategoryDTO> getAllCategory(DataTableFilter filter);
+    CategoryDTO getCategoryById(Long id);
 }

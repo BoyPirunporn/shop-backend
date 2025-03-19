@@ -37,8 +37,8 @@ public class CategoryAdminController {
         this.categoryService = categoryService;
     }
     @GetMapping("{id}")
-    public ResponseEntity<ResponseWithPayload<CategoryDTO>> getById(@RequestParam Long id){
-        return ResponseEntity.ok(new ResponseWithPayload<>(200,null));
+    public ResponseEntity<ResponseWithPayload<CategoryDTO>> getById(@PathVariable Long id){
+        return ResponseEntity.ok(new ResponseWithPayload<>(200,categoryService.getCategoryById(id)));
     }
     @GetMapping
     public ResponseEntity<ResponseDataTable<CategoryDTO>> getAllCategory(@ModelAttribute DataTableFilter filter){
@@ -54,12 +54,12 @@ public class CategoryAdminController {
         return ResponseEntity.ok(response);
     }
 
-    @PutMapping
-    public ResponseEntity<ResponseMessage> updateCategory(@RequestBody CategoryDTO categoryDTO){
-        categoryService.updateCategory(categoryDTO);
+    @PutMapping(consumes = "multipart/form-data")
+    public ResponseEntity<ResponseMessage> updateCategory(@ModelAttribute CategoryRequest category) throws IOException{
+        categoryService.updateCategory(category);
         ResponseMessage response = new ResponseMessage();
         response.setStatus(200);
-        response.setMessage("Category has been updated.");
+        response.setMessage("Category has been created.");
         return ResponseEntity.ok(response);
     }
 

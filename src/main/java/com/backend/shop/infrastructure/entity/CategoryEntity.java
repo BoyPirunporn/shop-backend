@@ -76,5 +76,11 @@ public class CategoryEntity extends BaseEntity {
         this.products = products;
     }
 
-
+    @Override
+    public String toString() {
+        return "CategoryEntity{" +
+                "name='" + name + '\'' +
+                ", imageUrl='" + imageUrl + '\'' +
+                '}';
+    }
 }
