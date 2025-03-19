@@ -8,9 +8,6 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import com.backend.shop.domains.datatable.DataTableFilter;
-import com.backend.shop.domains.datatable.ResponseDataTable;
-import com.backend.shop.infrastructure.exceptions.BaseException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -20,8 +17,11 @@ import com.backend.shop.applications.dto.category.request.CategoryRequest;
 import com.backend.shop.applications.interfaces.ICategoryService;
 import com.backend.shop.applications.interfaces.IFileService;
 import com.backend.shop.applications.mapper.CategoryModelMapper;
+import com.backend.shop.domains.datatable.DataTableFilter;
+import com.backend.shop.domains.datatable.ResponseDataTable;
 import com.backend.shop.domains.models.Category;
 import com.backend.shop.domains.usecase.ICategoryusecase;
+import com.backend.shop.infrastructure.exceptions.BaseException;
 
 @Service
 public class CategoryServiceImpl implements ICategoryService {
@@ -37,17 +37,16 @@ public class CategoryServiceImpl implements ICategoryService {
         this.fileService = fileService;
     }
 
-
     @Override
     public ResponseDataTable<CategoryDTO> getAllCategory(DataTableFilter filter) {
         List<CategoryDTO> categories = categoryUsecase.getAllCategory(filter).stream().map(categoryMapper::toDTO).toList();
         Long count = categoryUsecase.countCategory();
-        return new ResponseDataTable<>(200,categories,count,filter.getPage(),filter.getSize());
+        return new ResponseDataTable<>(200, categories, count, filter.getPage(), filter.getSize());
     }
 
     @Override
     public CategoryDTO getCategoryById(Long id) {
-        return categoryMapper.toDTO(categoryUsecase.getCategoryById(id));
+        return categoryMapper.toDTO(categoryUsecase.getCategoryById(id).orElseThrow(() -> new BaseException("Data not found", HttpStatus.BAD_REQUEST)));
     }
 
     @Override
@@ -60,9 +59,8 @@ public class CategoryServiceImpl implements ICategoryService {
         categoryUsecase.deleteCategory(id);
     }
 
-
     @Override
-    public void createCategory(CategoryRequest req) throws IOException{
+    public void createCategory(CategoryRequest req) throws IOException {
         Category model = mapToCategory(req, null);
         categoryUsecase.createCategory(model);
 
@@ -70,18 +68,18 @@ public class CategoryServiceImpl implements ICategoryService {
 
     @Override
     public void updateCategory(CategoryRequest category) throws IOException {
-      try{
-          Category parent = null;
-          if(category.getParentId()!= null){
-              parent = categoryUsecase.getByParentId(category.getParentId()).orElseThrow(() -> new BaseException("Parent not found",HttpStatus.BAD_REQUEST));
-          }
-          Category model = mapToCategory(category, parent);
-          categoryUsecase.createCategory(model);
-      }catch (BaseException ex){
-          throw new BaseException(ex.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
-      }
+        try {
+            Category cModel = null;
+            if (category.getParentId() != null) {
+                cModel = categoryUsecase.getCategoryById(category.getParentId()).orElseThrow(() -> new BaseException("Parent not found", HttpStatus.BAD_REQUEST));
+            }
+            System.out.println("SERVICE MODEL : " + (cModel != null ? cModel.getParent().getId() : "null"));
+            Category model = mapToCategory(category, cModel.getParent());
+            categoryUsecase.updateCategory(model);
+        } catch (BaseException ex) {
+            throw new BaseException(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
-
 
     /**
      * แปลง CategoryRequest เป็น Category
@@ -114,6 +112,7 @@ public class CategoryServiceImpl implements ICategoryService {
 
         return cate;
     }
+
     /**
      * อัปโหลดรูปภาพและคืนค่า URL
      */

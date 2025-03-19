@@ -1,19 +1,15 @@
 package com.backend.shop.infrastructure.usecase;
 
-import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import com.backend.shop.applications.dto.category.request.CategoryRequest;
-import com.backend.shop.domains.datatable.DataTableFilter;
-import com.backend.shop.infrastructure.exceptions.BaseException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import com.backend.shop.domains.datatable.DataTableFilter;
 import com.backend.shop.domains.models.Category;
 import com.backend.shop.domains.usecase.ICategoryusecase;
 import com.backend.shop.infrastructure.entity.CategoryEntity;
@@ -21,7 +17,6 @@ import com.backend.shop.infrastructure.mapper.CategoryEntityMapper;
 import com.backend.shop.infrastructure.repository.CategoryJpaRepository;
 
 import jakarta.transaction.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class CategoryUsecase implements ICategoryusecase {
@@ -37,7 +32,7 @@ public class CategoryUsecase implements ICategoryusecase {
     @Override
     @Transactional
     public void createCategory(Category category) {
-        CategoryEntity categoryEntity = mapToCategoryEntity(category,null);
+        CategoryEntity categoryEntity = mapToCategoryEntity(category, null);
         categoryRepository.save(categoryEntity);
     }
 
@@ -47,8 +42,8 @@ public class CategoryUsecase implements ICategoryusecase {
         entity.setName(model.getName());
         entity.setParent(parent);
         entity.setImageUrl(
-                (model.getImageUrl() != null) ? model.getImageUrl() :
-                        (parent != null ? parent.getImageUrl() : null)
+                (model.getImageUrl() != null) ? model.getImageUrl()
+                : (parent != null ? parent.getImageUrl() : null)
         );
         // ตรวจสอบ children และ map พวกมัน
         List<CategoryEntity> children = Optional.ofNullable(model.getChildren())
@@ -60,14 +55,15 @@ public class CategoryUsecase implements ICategoryusecase {
                 .collect(Collectors.toList());
         entity.setChildren(children); // กำหนด children ให้ category
 
-
         return entity;
     }
 
-
     @Override
     public void updateCategory(Category category) {
-        categoryRepository.save(categoryEntityMapper.toEntity(category));
+        CategoryEntity parent = categoryEntityMapper.toEntity(category.getParent());
+        CategoryEntity categoryEntity = mapToCategoryEntity(category, parent);
+
+        categoryRepository.save(categoryEntity);
     }
 
     @Override
@@ -92,8 +88,8 @@ public class CategoryUsecase implements ICategoryusecase {
     }
 
     @Override
-    public Category getCategoryById(Long id) {
-        return categoryEntityMapper.toModel(categoryRepository.findById(id).orElse(null));
+    public Optional<Category> getCategoryById(Long id) {
+        return categoryRepository.findById(id).map(categoryEntityMapper::toModel);
     }
 
     @Override
