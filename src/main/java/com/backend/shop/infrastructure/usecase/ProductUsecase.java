@@ -2,18 +2,18 @@ package com.backend.shop.infrastructure.usecase;
 
 import java.util.List;
 
+import com.backend.shop.infrastructure.entity.ProductOptionEntity;
+import com.backend.shop.infrastructure.entity.ProductOptionValueEntity;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import com.backend.shop.domains.models.Product;
 import com.backend.shop.domains.datatable.DataTableFilter;
+import com.backend.shop.domains.models.Product;
 import com.backend.shop.domains.usecase.IProductUsecase;
 import com.backend.shop.infrastructure.entity.CategoryEntity;
 import com.backend.shop.infrastructure.entity.ProductEntity;
-import com.backend.shop.infrastructure.entity.ProductVariantEntity;
-import com.backend.shop.infrastructure.entity.ProductVariantOptionEntity;
 import com.backend.shop.infrastructure.exceptions.BaseException;
 import com.backend.shop.infrastructure.mapper.ProductEntityMapper;
 import com.backend.shop.infrastructure.repository.CategoryJpaRepository;
@@ -46,17 +46,13 @@ public class ProductUsecase implements IProductUsecase {
         ProductEntity _product = productEntityMapper.toEntity(product);
         _product.setCategory(category);
 
-        // ✅ ผูก Variant กับ Product และ Option กับ Variant
-        for (ProductVariantEntity variant : _product.getProductVariants()) {
-            variant.setProduct(_product); // 🟢 กำหนด product ให้ variant
-            if (variant.getVariantImage() != null) { // ✅ ตรวจสอบก่อนใช้
-                variant.getVariantImage().setProductVariant(variant);
-            }
-            for (ProductVariantOptionEntity variantOption : variant.getProductVariantOptions()) {
-                variantOption.setProductVariant(variant); // 🟢 กำหนด variant ให้ variantOption
-            }
-
-        }
+        // // ✅ ผูก Variant กับ Product และ Option กับ Variant
+         for (ProductOptionEntity productOption : _product.getProductOptions()) {
+             productOption.setProduct(_product); // 🟢 กำหนด product ให้ variant
+             for (ProductOptionValueEntity optionValue : productOption.getProductOptionValues()) {
+                 optionValue.setProductOption(productOption); // 🟢 กำหนด variant ให้ variantOption
+             }
+         }
         productJpaRepository.save(_product);
     }
 
@@ -88,9 +84,8 @@ public class ProductUsecase implements IProductUsecase {
                 PageRequest.of(filter.getPage(), filter.getSize())).stream().map(productEntityMapper::toModel).toList();
     }
 
-
     @Override
-    public Long countProduct(){
+    public Long countProduct() {
         return productJpaRepository.count();
     }
 

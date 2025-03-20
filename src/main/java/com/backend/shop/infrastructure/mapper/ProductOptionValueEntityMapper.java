@@ -9,8 +9,12 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface ProductOptionValueEntityMapper {
 
-    @Mapping(target = "productOption" , ignore = true)
+    @Mapping(target = "productOption.productOptionValues", ignore = true)
+    @Mapping(target = "productOption.product", ignore = true)
     ProductOptionValue toModel(ProductOptionValueEntity entity);
+
+    @Mapping(target = "productOption.productOptionValues", ignore = true)
+    @Mapping(target = "productOption.product", ignore = true)
     ProductOptionValueEntity toEntity(ProductOptionValue model);
-    
+
 }

@@ -1,14 +1,14 @@
-package com.backend.shop.applications.dto.product;
+package com.backend.shop.applications.dto.product.request;
 
 import jakarta.validation.constraints.NotBlank;
 
-public class ProductOptionValueDTO {
+public class ProductOptionValueRequest {
 
     private Long id;
     @NotBlank
     private String value;
 
-    private String image;
+    private Object image;
 
     public Long getId() {
         return id;
@@ -26,11 +26,12 @@ public class ProductOptionValueDTO {
         this.value = value;
     }
 
-    public String getImage() {
+    public Object getImage() {
         return image;
     }
 
-    public void setImage(String image) {
+    public void setImage(Object image) {
         this.image = image;
     }
+
 }

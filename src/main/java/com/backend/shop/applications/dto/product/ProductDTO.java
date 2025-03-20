@@ -14,7 +14,7 @@ public class ProductDTO {
     private BigDecimal price;
     private String mainImage;
     private String category;
-    private List<ProductVariantDTO> productVariants = new ArrayList<>();
+    private List<ProductOptionDTO> productOptions = new ArrayList<>();
 
     @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDateTime createdAt;
@@ -54,12 +54,15 @@ public class ProductDTO {
     public void setCategory(String category) {
         this.category = category;
     }
-    public List<ProductVariantDTO> getProductVariants() {
-        return productVariants;
+
+    public List<ProductOptionDTO> getProductOptions() {
+        return productOptions;
     }
-    public void setProductVariants(List<ProductVariantDTO> productVariants) {
-        this.productVariants = productVariants;
+
+    public void setProductOptions(List<ProductOptionDTO> productOptions) {
+        this.productOptions = productOptions;
     }
+
     @Override
     public String toString() {
         return "ProductDTO [name=" + name + ", description=" + description + ", price=" + price + ", mainImage="

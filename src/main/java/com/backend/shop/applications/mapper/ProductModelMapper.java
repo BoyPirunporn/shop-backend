@@ -18,7 +18,7 @@ public interface ProductModelMapper {
 
     @Mapping(target = "mainImage",ignore = true)
     @Mapping(target = "category",source = "category",qualifiedByName = "categoryStringToModel")
-    @Mapping(target = "productVariants",ignore = true)
+    @Mapping(target = "productOptions",ignore = true)
     Product toModel(ProductRequestDTO requestDTO);
 
 

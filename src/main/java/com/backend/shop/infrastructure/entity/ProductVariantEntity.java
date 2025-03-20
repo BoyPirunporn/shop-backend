@@ -13,7 +13,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 
-@Entity(name = "product_variant")
+//@Entity(name = "product_variant")
 public class ProductVariantEntity extends BaseEntity {
     private BigDecimal price;
     private Integer stock;

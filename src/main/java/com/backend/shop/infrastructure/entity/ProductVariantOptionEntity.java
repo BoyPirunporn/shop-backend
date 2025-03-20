@@ -4,7 +4,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 
-@Entity(name = "product_variant_option")
+//@Entity(name = "product_variant_option")
 public class ProductVariantOptionEntity extends BaseEntity {
 
     @ManyToOne

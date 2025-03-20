@@ -6,15 +6,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import com.backend.shop.applications.mapper.ProductModelMapper;
-import com.backend.shop.domains.datatable.ResponseDataTable;
-import com.backend.shop.domains.models.Product;
-import com.backend.shop.domains.datatable.DataTableFilter;
-import com.backend.shop.domains.models.ProductOptionValue;
-import com.backend.shop.domains.models.ProductVariant;
-import com.backend.shop.domains.models.ProductVariantOption;
-import com.backend.shop.domains.models.VariantImage;
-import com.backend.shop.infrastructure.exceptions.BaseException;
+import com.backend.shop.applications.dto.product.request.ProductOptionRequest;
+import com.backend.shop.applications.dto.product.request.ProductOptionValueRequest;
+import com.backend.shop.domains.models.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -25,7 +19,11 @@ import com.backend.shop.applications.dto.product.request.ProductRequestDTO;
 import com.backend.shop.applications.dto.product.request.ProductVariantRequestDTO;
 import com.backend.shop.applications.interfaces.IFileService;
 import com.backend.shop.applications.interfaces.IProductService;
+import com.backend.shop.applications.mapper.ProductModelMapper;
+import com.backend.shop.domains.datatable.DataTableFilter;
+import com.backend.shop.domains.datatable.ResponseDataTable;
 import com.backend.shop.domains.usecase.IProductUsecase;
+import com.backend.shop.infrastructure.exceptions.BaseException;
 
 @Service
 public class ProductServiceImpl implements IProductService {
@@ -73,58 +71,90 @@ public class ProductServiceImpl implements IProductService {
     @Override
     public void createProduct(ProductRequestDTO product) throws IOException {
         Product productModel = productModelMapper.toModel(product);
-        System.out.println("Product Id : " + product.getId());
+         System.out.println("Product Id : " + product.getId());
 
-        if (product.getMainImage() instanceof MultipartFile) {
-            MultipartFile mainImage = (MultipartFile) product.getMainImage();
-            UUID uid = UUID.randomUUID();
-            // สร้าง path สำหรับ main image
-            String pathFile = fileService.createPath(mainImage,
-                    Paths.get("product", uid.toString(), mainImage.getOriginalFilename()).toString());
-            productModel.setMainImage(pathFile);
-        } else {
-            productModel.setMainImage((String) product.getMainImage());
+         if (product.getMainImage() != null && product.getMainImage() instanceof MultipartFile) {
+             MultipartFile mainImage = (MultipartFile) product.getMainImage();
+             UUID uid = UUID.randomUUID();
+             // สร้าง path สำหรับ main image
+             String pathFile = fileService.createPath(mainImage,
+                     Paths.get("product", uid.toString(), mainImage.getOriginalFilename()).toString());
+             productModel.setMainImage(pathFile);
+         } else {
+             productModel.setMainImage((String) product.getMainImage());
+         }
+         // สร้าง Product Variants
+         List<ProductOption> productOption = createProductOption(product.getProductOptions(), productModel);
+         // ตั้งค่าผลิตภัณฑ์
+         productModel.setProductOptions(productOption);
+         System.out.println("getProductOptions : " + productModel.getProductOptions().get(0)
+                 .getProductOptionValues().get(0).getValue());
+         productUsecase.createProduct(productModel);
+    }
+
+    private List<ProductOption> createProductOption(List<ProductOptionRequest> request,Product rootModel) throws IOException {
+        List<ProductOption> productOptions = new ArrayList<>();
+
+        for (ProductOptionRequest req: request) {
+            ProductOption productOption = new ProductOption();
+            productOption.setEnableImage(req.getEnableImage());
+            productOption.setName(req.getName());
+            productOption.setProduct(rootModel);
+            if(req.getProductOptionValues() != null && !req.getProductOptionValues().isEmpty()){
+                List<ProductOptionValue> productOptionValues = createProductOptionValue(req.getProductOptionValues(),productOption);
+                productOption.setProductOptionValues(productOptionValues);
+            }
+            productOptions.add(productOption);
         }
+        return productOptions;
+    }
 
-        // สร้าง Product Variants
-        List<ProductVariant> productVariants = createProductVariants(product.getProductVariants(), productModel);
+    private List<ProductOptionValue> createProductOptionValue(List<ProductOptionValueRequest> requests,ProductOption model) throws IOException {
+        List<ProductOptionValue> productOptionValues = new ArrayList<>();
 
-        // ตั้งค่าผลิตภัณฑ์
-        productModel.setProductVariants(productVariants);
+        for (ProductOptionValueRequest req : requests){
+            ProductOptionValue productOptionValue = new ProductOptionValue();
+            productOptionValue.setProductOption(model);
+            productOptionValue.setValue(req.getValue());
 
-        System.out.println("getProductVariantOptions : " + productModel.getProductVariants().get(0)
-                .getProductVariantOptions().get(0).getId());
-        productUsecase.createProduct(productModel);
+            if(req.getImage() != null && req.getImage() instanceof MultipartFile){
+                UUID uid = UUID.randomUUID();
+                MultipartFile file = (MultipartFile) req.getImage();
+                // สร้าง path สำหรับ variant image
+                String pathFileVariant = fileService.createPath(file,Paths.get("product", uid.toString(), file.getOriginalFilename()).toString());
+                productOptionValue.setImage(pathFileVariant);
+            }
+            productOptionValues.add(productOptionValue);
+        }
+        return productOptionValues;
     }
 
     @Override
     public void updateProduct(ProductRequestDTO product) throws IOException {
         Product productModel = productModelMapper.toModel(product);
-        System.out.println("SIZE : " + product.getProductVariants().size());
-        UUID uid = UUID.randomUUID();
-        if (product.getMainImage() instanceof MultipartFile) {
-            MultipartFile mainImage = (MultipartFile) product.getMainImage();
-            // สร้าง path สำหรับ main image
-            String pathFile = fileService.createPath(mainImage,
-                    Paths.get("product", uid.toString(), mainImage.getOriginalFilename()).toString());
-            productModel.setMainImage(pathFile);
-        } else {
-            productModel.setMainImage((String) product.getMainImage());
-        }
+        // System.out.println("SIZE : " + product.getProductVariants().size());
+        // UUID uid = UUID.randomUUID();
+        // if (product.getMainImage() instanceof MultipartFile) {
+        //     MultipartFile mainImage = (MultipartFile) product.getMainImage();
+        //     // สร้าง path สำหรับ main image
+        //     String pathFile = fileService.createPath(mainImage,
+        //             Paths.get("product", uid.toString(), mainImage.getOriginalFilename()).toString());
+        //     productModel.setMainImage(pathFile);
+        // } else {
+        //     productModel.setMainImage((String) product.getMainImage());
+        // }
 
-        // สร้าง Product Variants
-        List<ProductVariant> productVariants = createProductVariants(product.getProductVariants(), productModel);
-
-        productModel.setProductVariants(productVariants);
-
-        productUsecase.createProduct(productModel);
+        // // สร้าง Product Variants
+        // List<ProductVariant> productVariants = createProductVariants(product.getProductVariants(), productModel);
+        // productModel.setProductVariants(productVariants);
+        // productUsecase.createProduct(productModel);
     }
 
     @Override
     public ResponseDataTable<ProductDTO> filterProduct(DataTableFilter filter) {
         List<ProductDTO> productDTOS = productUsecase.filterProduct(filter).stream().map(productModelMapper::toDTO).toList();
         Long totalRecords = productUsecase.countProduct();
-        return new ResponseDataTable<>(200,productDTOS,totalRecords,filter.getPage(),filter.getSize());
+        return new ResponseDataTable<>(200, productDTOS, totalRecords, filter.getPage(), filter.getSize());
     }
 
     private List<ProductVariant> createProductVariants(List<ProductVariantRequestDTO> productVariantDTOs,

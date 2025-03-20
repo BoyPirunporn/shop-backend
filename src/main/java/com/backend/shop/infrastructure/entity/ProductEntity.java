@@ -19,8 +19,15 @@ public class ProductEntity extends BaseEntity {
     private CategoryEntity category;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ProductVariantEntity> productVariants = new ArrayList<>();
+    private List<ProductOptionEntity> productOptions = new ArrayList<>();
 
+    public List<ProductOptionEntity> getProductOptions() {
+        return productOptions;
+    }
+
+    public void setProductOptions(List<ProductOptionEntity> productOptions) {
+        this.productOptions = productOptions;
+    }
 
     public String getName() {
         return name;
@@ -62,14 +69,5 @@ public class ProductEntity extends BaseEntity {
         this.category = category;
     }
 
-    public List<ProductVariantEntity> getProductVariants() {
-        return productVariants;
-    }
 
-    public void setProductVariants(List<ProductVariantEntity> productVariants) {
-        this.productVariants = productVariants;
-    }
-
-  
-    
 }

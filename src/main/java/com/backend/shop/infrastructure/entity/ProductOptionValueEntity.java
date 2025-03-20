@@ -9,6 +9,7 @@ import jakarta.persistence.ManyToOne;
 public class ProductOptionValueEntity extends BaseEntity {
 
     private String value;
+    private String image;
 
     @JsonIgnore
     @ManyToOne
@@ -31,5 +32,11 @@ public class ProductOptionValueEntity extends BaseEntity {
         this.productOption = productOption;
     }
 
+    public String getImage() {
+        return image;
+    }
 
+    public void setImage(String image) {
+        this.image = image;
+    }
 }

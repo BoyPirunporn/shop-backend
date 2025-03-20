@@ -7,12 +7,12 @@ import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring",uses = {
         CategoryEntityMapper.class,
-        ProductVariantEntityMapper.class
+        ProductOptionEntityMapper.class
 })
 public interface ProductEntityMapper {
-    @Mapping(target = "productVariants", source = "productVariants")
+    @Mapping(target = "productOptions", source = "productOptions")
     ProductEntity toEntity(Product product);
-    @Mapping(target = "productVariants", source = "productVariants")
+    @Mapping(target = "productOptions", source = "productOptions")
     Product toModel(ProductEntity product);
 
 

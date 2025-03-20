@@ -1,11 +1,11 @@
 package com.backend.shop.infrastructure.entity;
 
-import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 
-@Entity(name = "variant_image")
+// @Entity(name = "variant_image")
 public class VariantImageEntity extends BaseEntity {
+
     private String url;
 
     @OneToOne(mappedBy = "variantImage")
@@ -28,10 +28,4 @@ public class VariantImageEntity extends BaseEntity {
         this.productVariant = productVariant;
     }
 
- 
-   
-
-    
-    
-    
 }

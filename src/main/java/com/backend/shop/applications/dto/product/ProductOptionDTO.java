@@ -9,7 +9,7 @@ import java.util.List;
 public class ProductOptionDTO {
 
     private Long id;
-
+    private Boolean enableImage;
     @NotBlank
     private String name;
     @NotEmpty
@@ -35,5 +35,13 @@ public class ProductOptionDTO {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Boolean getEnableImage() {
+        return enableImage;
+    }
+
+    public void setEnableImage(Boolean enableImage) {
+        this.enableImage = enableImage;
     }
 }

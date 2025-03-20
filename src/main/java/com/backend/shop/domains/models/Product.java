@@ -14,7 +14,7 @@ public class Product {
 
     private Category category;
     
-    private List<ProductVariant> productVariants = new ArrayList<>();
+    private List<ProductOption> productOptions = new ArrayList<>();
 
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
@@ -70,12 +70,12 @@ public class Product {
         this.category = category;
     }
 
-    public List<ProductVariant> getProductVariants() {
-        return productVariants;
+    public List<ProductOption> getProductOptions() {
+        return productOptions;
     }
 
-    public void setProductVariants(List<ProductVariant> productVariants) {
-        this.productVariants = productVariants;
+    public void setProductOptions(List<ProductOption> productOptions) {
+        this.productOptions = productOptions;
     }
 
     public LocalDateTime getCreatedAt() {

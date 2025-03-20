@@ -3,13 +3,18 @@ package com.backend.shop.infrastructure.entity;
 import java.util.ArrayList;
 import java.util.List;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.OneToMany;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
 
 @Entity(name = "product_option")
 public class ProductOptionEntity extends BaseEntity {
     private String name;
+    private Boolean enableImage;
+
+    @JsonIgnore
+    @ManyToOne
+    @JoinColumn(name = "product_id",nullable = false)
+    private ProductEntity product;
 
     @OneToMany(mappedBy = "productOption",cascade = CascadeType.ALL,orphanRemoval = true)
     private List<ProductOptionValueEntity> productOptionValues = new ArrayList<>();
@@ -30,6 +35,19 @@ public class ProductOptionEntity extends BaseEntity {
         this.productOptionValues = productOptionValues;
     }
 
+    public Boolean getEnableImage() {
+        return enableImage;
+    }
 
-    
+    public void setEnableImage(Boolean enableImage) {
+        this.enableImage = enableImage;
+    }
+
+    public ProductEntity getProduct() {
+        return product;
+    }
+
+    public void setProduct(ProductEntity product) {
+        this.product = product;
+    }
 }
