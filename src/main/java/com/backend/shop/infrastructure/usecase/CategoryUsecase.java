@@ -79,7 +79,7 @@ public class CategoryUsecase implements ICategoryusecase {
     @Override
     public List<Category> getAllCategory(DataTableFilter filter) {
         Pageable pageable = PageRequest.of(filter.getPage(), filter.getSize());
-        return categoryRepository.findAll(pageable).stream().map(categoryEntityMapper::toModel).toList();
+        return categoryRepository.findAllByParentIsNull(pageable).stream().map(categoryEntityMapper::toModel).toList();
     }
 
     @Override

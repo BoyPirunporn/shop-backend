@@ -8,9 +8,9 @@ import com.backend.shop.domains.models.orders.OrderItem;
 
 @Mapper(componentModel = "spring")
 public interface OrderItemModelMapper {
-    
+
     @Mapping(target = "order", ignore = true)
-    @Mapping(target = "productVariant.product", ignore = true)
+//    @Mapping(target = "productOptionValue.productOption", ignore = true)
     OrderItem toModel(OrderItemDTO dto);
 
     OrderItemDTO toDTO(OrderItem model);

@@ -1,13 +1,15 @@
 package com.backend.shop.infrastructure.entity.order;
 
 import java.math.BigDecimal;
+import java.util.HashSet;
+import java.util.Set;
 
 import com.backend.shop.infrastructure.entity.BaseEntity;
+import com.backend.shop.infrastructure.entity.ProductOptionEntity;
+import com.backend.shop.infrastructure.entity.ProductOptionValueEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 
 @Entity(name = "order_item")
 public class OrderItemEntity extends BaseEntity {
@@ -17,9 +19,14 @@ public class OrderItemEntity extends BaseEntity {
     @JoinColumn(name = "order_id", nullable = false)
     private OrderEntity order;
 
-    // @ManyToOne
-    // @JoinColumn(name = "product_variant_id",nullable = false)
-    // private ProductVariantEntity productVariant;
+    @ManyToMany
+    @JoinTable(
+            name = "order_item_option_values",
+            joinColumns = @JoinColumn(name = "order_item_id"),
+            inverseJoinColumns = @JoinColumn(name = "product_option_value_id")
+    )
+    private Set<ProductOptionValueEntity> selectedOptionValues = new HashSet<>(); // ✅ เก็บหลาย Option Value
+
     private int quantity;
     private BigDecimal unitPrice;
     private BigDecimal totalPrice;
@@ -32,12 +39,14 @@ public class OrderItemEntity extends BaseEntity {
         this.order = order;
     }
 
-    // public ProductVariantEntity getProductVariant() {
-    //     return productVariant;
-    // }
-    // public void setProductVariant(ProductVariantEntity productVariant) {
-    //     this.productVariant = productVariant;
-    // }
+    public Set<ProductOptionValueEntity> getSelectedOptionValues() {
+        return selectedOptionValues;
+    }
+
+    public void setSelectedOptionValues(Set<ProductOptionValueEntity> selectedOptionValues) {
+        this.selectedOptionValues = selectedOptionValues;
+    }
+
     public int getQuantity() {
         return quantity;
     }

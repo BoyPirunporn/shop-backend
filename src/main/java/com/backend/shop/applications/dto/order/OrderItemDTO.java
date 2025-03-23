@@ -2,11 +2,15 @@ package com.backend.shop.applications.dto.order;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
+
+import com.backend.shop.applications.dto.product.ProductOptionValueDTO;
 
 public class OrderItemDTO {
 
     private Long id;
-    // private ProductVariantDTO productVariant;
+    private Set<ProductOptionValueDTO> selectedOptionValues = new HashSet<>();
     private Integer quantity;
     private BigDecimal unitPrice;
     private BigDecimal totalPrice;
@@ -21,12 +25,14 @@ public class OrderItemDTO {
         this.id = id;
     }
 
-    // public ProductVariantDTO getProductVariant() {
-    //     return productVariant;
-    // }
-    // public void setProductVariant(ProductVariantDTO productVariant) {
-    //     this.productVariant = productVariant;
-    // }
+    public Set<ProductOptionValueDTO> getSelectedOptionValues() {
+        return selectedOptionValues;
+    }
+
+    public void setSelectedOptionValues(Set<ProductOptionValueDTO> selectedOptionValues) {
+        this.selectedOptionValues = selectedOptionValues;
+    }
+
     public Integer getQuantity() {
         return quantity;
     }
@@ -66,5 +72,4 @@ public class OrderItemDTO {
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
     }
-
 }

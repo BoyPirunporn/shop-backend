@@ -1,13 +1,16 @@
 package com.backend.shop.domains.models.orders;
 
 import java.math.BigDecimal;
+import java.util.HashSet;
+import java.util.Set;
 
 import com.backend.shop.domains.models.BaseModel;
+import com.backend.shop.domains.models.ProductOptionValue;
 
 public class OrderItem extends BaseModel {
 
     private Order order;
-    // private ProductVariant productVariant;
+    private Set<ProductOptionValue> selectedOptionValues = new HashSet<>();
     private Integer quantity;
     private BigDecimal unitPrice;
     private BigDecimal totalPrice;
@@ -20,12 +23,14 @@ public class OrderItem extends BaseModel {
         this.order = order;
     }
 
-    // public ProductVariant getProductVariant() {
-    //     return productVariant;
-    // }
-    // public void setProductVariant(ProductVariant productVariant) {
-    //     this.productVariant = productVariant;
-    // }
+    public Set<ProductOptionValue> getSelectedOptionValues() {
+        return selectedOptionValues;
+    }
+
+    public void setSelectedOptionValues(Set<ProductOptionValue> selectedOptionValues) {
+        this.selectedOptionValues = selectedOptionValues;
+    }
+
     public Integer getQuantity() {
         return quantity;
     }

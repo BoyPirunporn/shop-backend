@@ -63,7 +63,7 @@ public class CategoryAdminController {
         return ResponseEntity.ok(response);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("{id}")
     public ResponseEntity<ResponseMessage> deleteCategory(@PathVariable Long id){
         categoryService.deleteCategory(id);
         ResponseMessage response = new ResponseMessage();

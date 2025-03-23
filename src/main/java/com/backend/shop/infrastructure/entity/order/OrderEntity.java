@@ -19,6 +19,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
+import org.springframework.data.annotation.CreatedDate;
 
 @Entity(name = "orders")
 public class OrderEntity extends BaseEntity {
@@ -29,6 +30,8 @@ public class OrderEntity extends BaseEntity {
 
     private BigDecimal totalAmount;
     private BigDecimal discount;
+    @CreatedDate
+    @Column(updatable = false) // ✅ ห้ามอัปเดต createdAt โดยเด็ดขาด
     private LocalDateTime orderDate;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)

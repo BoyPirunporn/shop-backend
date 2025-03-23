@@ -4,20 +4,21 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 import com.backend.shop.domains.models.orders.OrderItem;
+import com.backend.shop.infrastructure.entity.ProductOptionValueEntity;
 import com.backend.shop.infrastructure.entity.order.OrderItemEntity;
-import com.backend.shop.infrastructure.mapper.ProductVariantEntityMapper;
-import com.backend.shop.infrastructure.mapper.ProductVariantOptionEntityMapper;
+import com.backend.shop.infrastructure.mapper.ProductOptionEntityMapper;
 
 @Mapper(componentModel = "spring", uses = {
-    PaymentEntityMapper.class,})
+        ProductOptionEntityMapper.class,
+        ProductOptionValueEntity.class,
+        PaymentEntityMapper.class, })
 public interface OrderItemEntityMapper {
 
     @Mapping(target = "order", ignore = true)
-    // @Mapping(target = "productVariant.product", ignore = true)
+    // @Mapping(target = "productOptionValue.productOption", ignore = true)
     OrderItem toModel(OrderItemEntity entity);
 
-    // @Mapping(target = "productVariant.product", ignore = true)
-    // @Mapping(target = "productVariant.productVariantOptions", ignore = true)
+    // @Mapping(target = "productOptionValue.productOption", ignore = true)
     @Mapping(target = "order.orderItems", ignore = true)
     @Mapping(target = "order.user", source = "order.user")
     OrderItemEntity toEntity(OrderItem model);
