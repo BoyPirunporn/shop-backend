@@ -31,6 +31,8 @@ public class OrderServiceImpl implements IOrderService {
     @Override
     public void createOrder(OrderRequest order) {
         Order orderModel = orderModelMapper.orderRequestToModel(order);
+        System.out.println(orderModel.getOrderItems().get(0).getProduct());
+
         orderUsecase.createOrder(orderModel);
     }
 

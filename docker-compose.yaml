@@ -4,10 +4,10 @@ services:
     image: postgres:latest
     container_name: spring-data
     environment:
-      - POSTGRES_DB=e-commerce
-      - POSTGRES_USER=admin
-      - POSTGRES_PASSWORD=123456
-      - POSTGRES_ROOT_PASSWORD=123456
+      - POSTGRES_DB=${DB_NAME}
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASS}
+      - POSTGRES_ROOT_PASSWORD=${DB_PASS}
     ports:
       - 5432:5432
     volumes:

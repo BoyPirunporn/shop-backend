@@ -5,11 +5,13 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.backend.shop.domains.models.BaseModel;
+import com.backend.shop.domains.models.Product;
 import com.backend.shop.domains.models.ProductOptionValue;
 
 public class OrderItem extends BaseModel {
 
     private Order order;
+    private Product product;
     private Set<ProductOptionValue> selectedOptionValues = new HashSet<>();
     private Integer quantity;
     private BigDecimal unitPrice;
@@ -53,6 +55,14 @@ public class OrderItem extends BaseModel {
 
     public void setTotalPrice(BigDecimal totalPrice) {
         this.totalPrice = totalPrice;
+    }
+
+    public Product getProduct() {
+        return product;
+    }
+
+    public void setProduct(Product product) {
+        this.product = product;
     }
 
     @Override

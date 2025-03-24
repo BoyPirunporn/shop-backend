@@ -5,11 +5,13 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.backend.shop.applications.dto.product.ProductDTO;
 import com.backend.shop.applications.dto.product.ProductOptionValueDTO;
 
 public class OrderItemDTO {
 
     private Long id;
+    private ProductDTO product;
     private Set<ProductOptionValueDTO> selectedOptionValues = new HashSet<>();
     private Integer quantity;
     private BigDecimal unitPrice;
@@ -71,5 +73,13 @@ public class OrderItemDTO {
 
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public ProductDTO getProduct() {
+        return product;
+    }
+
+    public void setProduct(ProductDTO product) {
+        this.product = product;
     }
 }
