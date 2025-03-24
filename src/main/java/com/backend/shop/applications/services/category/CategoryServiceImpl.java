@@ -73,7 +73,6 @@ public class CategoryServiceImpl implements ICategoryService {
 //            if (category.getParentId() != null) {
 //                cModel = categoryUsecase.getCategoryById(category.getParentId()).orElseThrow(() -> new BaseException("Parent not found", HttpStatus.BAD_REQUEST));
 //            }
-//            System.out.println("SERVICE MODEL : " + (cModel != null ? cModel.getParent().getId() : "null"));
             Category model = mapToCategory(category, null);
             categoryUsecase.updateCategory(model);
         } catch (BaseException ex) {
@@ -89,12 +88,20 @@ public class CategoryServiceImpl implements ICategoryService {
         cate.setId(req.getId());
         cate.setName(req.getName());
         cate.setParent(parent);
-        if (req.getImageUrl() instanceof MultipartFile) {
+        if (req.getImageUrl() != null && req.getImageUrl() instanceof MultipartFile) {
             String saveFile = uploadImage((MultipartFile) req.getImageUrl());
-            System.out.println("SAVE PATH MAIN : " + saveFile);
             cate.setImageUrl(saveFile);
         } else {
-           cate.setImageUrl((String) req.getImageUrl());
+            if(req.getImageUrl() != null ){
+                System.out.println("REQUEST IS NOT NULL : " + req.getImageUrl());
+                cate.setImageUrl((String) req.getImageUrl());
+            }else if(parent != null){
+                System.out.println("PARENT IS NOT NULL : " + parent.getImageUrl());
+                cate.setImageUrl(parent.getImageUrl());
+            }else {
+                System.out.println("BOTH IS NULL");
+                cate.setImageUrl(null);
+            }
         }
         // ตรวจสอบ children และ map พวกมัน
         List<Category> children = Optional.ofNullable(req.getChildren())
@@ -102,11 +109,6 @@ public class CategoryServiceImpl implements ICategoryService {
                 .stream()
                 .map(childReq -> {
                     try {
-                        if(childReq.getImageUrl() != null){
-                            System.out.println("CHILD : "+childReq.getImageUrl());
-                        }else if(req.getImageUrl() != null) {
-                            System.out.println("REQUEST : "+req.getImageUrl());
-                        }
                         return mapToCategory(childReq, cate); // Recursion พร้อมส่ง parent ที่ถูกต้อง
                     } catch (IOException e) {
                         throw new RuntimeException("Error processing category child", e);
@@ -126,7 +128,6 @@ public class CategoryServiceImpl implements ICategoryService {
     private String uploadImage(MultipartFile file) throws IOException {
         UUID uid = UUID.randomUUID();
         String savePath = Paths.get("category", uid.toString(), file.getOriginalFilename()).toString();
-        System.out.println("SAVE PATH " + savePath);
         return fileService.createPath(file, savePath);
     }
 }

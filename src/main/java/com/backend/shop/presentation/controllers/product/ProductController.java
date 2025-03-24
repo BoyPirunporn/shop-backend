@@ -27,4 +27,9 @@ public class ProductController {
     public ResponseEntity<ResponseWithPayload<List<ProductDTO>>> getNewProduct(@RequestParam int page,@RequestParam int size) {
         return ResponseEntity.ok(new ResponseWithPayload<>(200, productService.getAllProduct(page,size)));
     }
+
+    @GetMapping("{id}")
+    public ResponseEntity<ResponseWithPayload<ProductDTO>> getProductById(@PathVariable Long id){
+        return ResponseEntity.ok(new ResponseWithPayload<>(200,productService.getProductById(id)));
+    }
 }
