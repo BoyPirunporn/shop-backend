@@ -1,5 +1,6 @@
 package com.backend.shop.infrastructure.mapper.orders;
 
+import com.backend.shop.infrastructure.mapper.CategoryEntityMapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -16,11 +17,15 @@ public interface OrderItemEntityMapper {
 
     @Mapping(target = "order", ignore = true)
     // @Mapping(target = "productOptionValue.productOption", ignore = true)
+    @Mapping(target = "product.category.products",ignore = true)
+    @Mapping(target = "product.productOptions",ignore = true)
     OrderItem toModel(OrderItemEntity entity);
 
     // @Mapping(target = "productOptionValue.productOption", ignore = true)
     @Mapping(target = "order.orderItems", ignore = true)
     @Mapping(target = "order.user", source = "order.user")
+    @Mapping(target = "product.productOptions",ignore = true)
+    @Mapping(target = "product.category.products",ignore = true)
     OrderItemEntity toEntity(OrderItem model);
 
 }

@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.backend.shop.infrastructure.entity.BaseEntity;
+import com.backend.shop.infrastructure.entity.ProductEntity;
 import com.backend.shop.infrastructure.entity.ProductOptionEntity;
 import com.backend.shop.infrastructure.entity.ProductOptionValueEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -19,6 +20,9 @@ public class OrderItemEntity extends BaseEntity {
     @JoinColumn(name = "order_id", nullable = false)
     private OrderEntity order;
 
+    @ManyToOne
+    @JoinColumn(name = "product_id", nullable = false)
+    private ProductEntity product; // ⬅️ อ้างถึงสินค้าที่ถูกสั่ง
     @ManyToMany
     @JoinTable(
             name = "order_item_option_values",
@@ -71,4 +75,11 @@ public class OrderItemEntity extends BaseEntity {
         this.totalPrice = totalPrice;
     }
 
+    public ProductEntity getProduct() {
+        return product;
+    }
+
+    public void setProduct(ProductEntity product) {
+        this.product = product;
+    }
 }

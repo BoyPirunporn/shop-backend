@@ -8,6 +8,7 @@ import com.backend.shop.applications.dto.order.request.OrderRequest;
 import com.backend.shop.domains.models.orders.Order;
 
 @Mapper(componentModel = "spring",uses = {
+    OrderItemModelMapper.class,
     PaymentModelMapper.class
 })
 public interface OrderModelMapper {

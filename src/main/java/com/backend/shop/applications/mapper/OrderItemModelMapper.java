@@ -10,8 +10,12 @@ import com.backend.shop.domains.models.orders.OrderItem;
 public interface OrderItemModelMapper {
 
     @Mapping(target = "order", ignore = true)
+    @Mapping(target = "product.category",ignore = true)
+    @Mapping(target = "product.productOptions",ignore = true)
 //    @Mapping(target = "productOptionValue.productOption", ignore = true)
     OrderItem toModel(OrderItemDTO dto);
 
+    
+    @Mapping(target = "product.category",source = "product.category.name")
     OrderItemDTO toDTO(OrderItem model);
 }
