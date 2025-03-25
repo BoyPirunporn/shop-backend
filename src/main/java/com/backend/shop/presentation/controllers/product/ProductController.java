@@ -2,6 +2,8 @@ package com.backend.shop.presentation.controllers.product;
 
 import java.util.List;
 
+import com.backend.shop.domains.datatable.ResponseDataTable;
+import com.backend.shop.domains.datatable.product.ProductFilter;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,8 +26,8 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<ResponseWithPayload<List<ProductDTO>>> getNewProduct(@RequestParam int page,@RequestParam int size) {
-        return ResponseEntity.ok(new ResponseWithPayload<>(200, productService.getAllProduct(page,size)));
+    public ResponseEntity<ResponseDataTable<ProductDTO>> getNewProduct(@ModelAttribute ProductFilter dataTableFilter) {
+        return ResponseEntity.ok(productService.filterProduct(dataTableFilter));
     }
 
     @GetMapping("{id}")

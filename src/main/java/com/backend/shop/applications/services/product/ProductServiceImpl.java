@@ -8,6 +8,7 @@ import java.util.UUID;
 
 import com.backend.shop.applications.dto.product.request.ProductOptionRequest;
 import com.backend.shop.applications.dto.product.request.ProductOptionValueRequest;
+import com.backend.shop.domains.datatable.product.ProductFilter;
 import com.backend.shop.domains.models.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -152,6 +153,13 @@ public class ProductServiceImpl implements IProductService {
 
     @Override
     public ResponseDataTable<ProductDTO> filterProduct(DataTableFilter filter) {
+        List<ProductDTO> productDTOS = productUsecase.filterProduct(filter).stream().map(productModelMapper::toDTO).toList();
+        Long totalRecords = productUsecase.countProduct();
+        return new ResponseDataTable<>(200, productDTOS, totalRecords, filter.getPage(), filter.getSize());
+    }
+
+    @Override
+    public ResponseDataTable<ProductDTO> filterProduct(ProductFilter filter) {
         List<ProductDTO> productDTOS = productUsecase.filterProduct(filter).stream().map(productModelMapper::toDTO).toList();
         Long totalRecords = productUsecase.countProduct();
         return new ResponseDataTable<>(200, productDTOS, totalRecords, filter.getPage(), filter.getSize());

@@ -2,8 +2,10 @@ package com.backend.shop.infrastructure.usecase;
 
 import java.util.List;
 
+import com.backend.shop.domains.datatable.product.ProductFilter;
 import com.backend.shop.infrastructure.entity.ProductOptionEntity;
 import com.backend.shop.infrastructure.entity.ProductOptionValueEntity;
+import com.backend.shop.infrastructure.specification.product.ProductSpecification;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
@@ -78,9 +80,18 @@ public class ProductUsecase implements IProductUsecase {
 
     @Override
     public List<Product> filterProduct(DataTableFilter filter) {
-        Specification<ProductEntity> spec = DataTableSpecification.filterBy(filter);
+        DataTableSpecification<ProductEntity> dataTableSpecification = new DataTableSpecification<>();
+        Specification<ProductEntity> spec = dataTableSpecification.filterBy(filter);
         return productJpaRepository.findAll(
                 spec,
+                PageRequest.of(filter.getPage(), filter.getSize())).stream().map(productEntityMapper::toModel).toList();
+    }
+
+    @Override
+    public List<Product> filterProduct(ProductFilter filter) {
+        ProductSpecification specification = new ProductSpecification();
+        return productJpaRepository.findAll(
+               specification.filterProduct(filter),
                 PageRequest.of(filter.getPage(), filter.getSize())).stream().map(productEntityMapper::toModel).toList();
     }
 

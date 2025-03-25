@@ -6,7 +6,7 @@ import org.springframework.data.jpa.domain.Specification;
 import com.backend.shop.domains.datatable.DataTableFilter;
 
 public class DataTableSpecification<T extends BaseEntity> {
-     public static <T> Specification<T> filterBy(DataTableFilter filter) {
+     public  <T> Specification<T> filterBy(DataTableFilter filter) {
         return (root, query, criteriaBuilder) -> {
             // Filter by other criteria (if any)
             

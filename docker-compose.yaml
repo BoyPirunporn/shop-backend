@@ -1,18 +1,42 @@
 
 services:
+#  application:
+#    build:
+#      context: .
+#    container_name: shop_application
+#    depends_on:
+#      - database
+#    ports:
+#      - 8080:8080
+#    environment:
+#      DB_URL: ${DB_URL}
+#      DB_USER: ${DB_USER}
+#      DB_PASS: ${DB_PASS}
+#      SECRET_KEY: ${SECRET_KEY}
+#      FILE_STORE: ${FILE_STORE}
+#    volumes:
+#      - D:/me/e-commerce/uploads:/mnt/shop-store
+#    networks:
+#      - shop-network
   database:
     image: postgres:latest
     container_name: spring-data
     environment:
-      - POSTGRES_DB=e-commerce
-      - POSTGRES_USER=admin
-      - POSTGRES_PASSWORD=123456
-      - POSTGRES_ROOT_PASSWORD=123456
+      - POSTGRES_DB=${DB_NAME}
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASS}
+      - POSTGRES_ROOT_PASSWORD=${DB_PASS}
     ports:
       - 5432:5432
     volumes:
       - my-database:/var/lib/postgres
+    networks:
+      - shop-network
 
+networks:
+  shop-network:
+    name: application-network
+    driver: bridge
 
 volumes:
   my-database:
