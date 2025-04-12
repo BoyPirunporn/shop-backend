@@ -23,5 +23,6 @@ public interface ICategoryusecase {
     Optional<Category> getCategoryById(Long id);
 
     Optional<Category> getByParentId(Long id);
+    List<Category> getAllCategoryByParentParentIsNull();
 
 }

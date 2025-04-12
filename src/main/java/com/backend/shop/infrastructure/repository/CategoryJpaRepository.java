@@ -23,4 +23,6 @@ public interface CategoryJpaRepository extends JpaRepository<CategoryEntity,Long
             """,nativeQuery = true)
     List<CategoryEntity> findAllByParent();
 
+    List<CategoryEntity> findAllByParentIsNotNullAndParentParentIsNull();
+
 }

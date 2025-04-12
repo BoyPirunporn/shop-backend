@@ -96,4 +96,9 @@ public class CategoryUsecase implements ICategoryusecase {
     public Optional<Category> getByParentId(Long id) {
         return categoryRepository.findFirstByParentId(id).map(categoryEntityMapper::toModel);
     }
+
+    @Override
+    public List<Category> getAllCategoryByParentParentIsNull() {
+        return categoryRepository.findAllByParentIsNotNullAndParentParentIsNull().stream().map(categoryEntityMapper::toModel).toList();
+    }
 }

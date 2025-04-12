@@ -17,6 +17,7 @@ import com.backend.shop.applications.dto.category.request.CategoryRequest;
 import com.backend.shop.applications.interfaces.ICategoryService;
 import com.backend.shop.applications.interfaces.IFileService;
 import com.backend.shop.applications.mapper.CategoryModelMapper;
+import com.backend.shop.domains.ResponseWithPayload;
 import com.backend.shop.domains.datatable.DataTableFilter;
 import com.backend.shop.domains.datatable.ResponseDataTable;
 import com.backend.shop.domains.models.Category;
@@ -129,5 +130,10 @@ public class CategoryServiceImpl implements ICategoryService {
         UUID uid = UUID.randomUUID();
         String savePath = Paths.get("category", uid.toString(), file.getOriginalFilename()).toString();
         return fileService.createPath(file, savePath);
+    }
+
+    @Override
+    public ResponseWithPayload<List<CategoryDTO>> getAllCategoryWithPayload(DataTableFilter filter) {
+       return new ResponseWithPayload<>(200,categoryUsecase.getAllCategoryByParentParentIsNull().stream().map(categoryMapper::toDTO).collect(Collectors.toList()));
     }
 }
