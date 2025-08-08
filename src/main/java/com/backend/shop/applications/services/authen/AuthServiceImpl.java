@@ -1,5 +1,7 @@
 package com.backend.shop.applications.services.authen;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -18,6 +20,7 @@ import com.backend.shop.infrastructure.jwt.interfaces.IJwtService;
 @Service
 public class AuthServiceImpl implements IAuthService {
 
+    private static final Logger logger = LoggerFactory.getLogger(AuthServiceImpl.class);
     private final IAuthUsecase authUsecase;
     private final IJwtService jwtService;
     private final UserDetailsService userDetailsService;
@@ -34,7 +37,7 @@ public class AuthServiceImpl implements IAuthService {
 
     @Override
     public TokenDTO signUp(AuthDTO auth) {
-        System.out.println(auth.toString());
+        logger.debug(auth.toString());
         User user = new User(auth.getEmail(), passwordEncoder.encode(auth.getPassword()), auth.getRoles());
         if (authUsecase.existingByEmail(auth.getEmail())) {
             throw new BaseException("Email already exists", HttpStatus.BAD_REQUEST);
@@ -49,11 +52,12 @@ public class AuthServiceImpl implements IAuthService {
     @Override
     public TokenDTO signIn(SignInDTO sign) {
         User user = authUsecase.findByEmail(sign.getEmail());
-        System.out.println(user.getPassword());
+        logger.debug(user.getPassword());
         if (user == null || !passwordEncoder.matches(sign.getPassword(), user.getPassword())) {
             throw new BaseException("Email or password not found", HttpStatus.UNAUTHORIZED);
         }
 
+        
         String token = jwtService.generateToken(user.getEmail());
         String refresnToken = jwtService.generateRefreshToken(user.getEmail());
         return new TokenDTO(token, refresnToken, user.getRoles());

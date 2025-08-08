@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.backend.shop.applications.dto.product.ProductOptionDTO;
+import com.backend.shop.applications.dto.category.CategoryDTO;
 
 public class ProductRequestDTO {
 
@@ -13,7 +13,7 @@ public class ProductRequestDTO {
     private String description;
     private BigDecimal price;
     private Object mainImage;
-    private String category;
+    private CategoryDTO category;
     private List<ProductOptionRequest> productOptions = new ArrayList<>();
 
     public Long getId() {
@@ -56,11 +56,11 @@ public class ProductRequestDTO {
         this.mainImage = mainImage;
     }
 
-    public String getCategory() {
+    public CategoryDTO getCategory() {
         return category;
     }
 
-    public void setCategory(String category) {
+    public void setCategory(CategoryDTO category) {
         this.category = category;
     }
 

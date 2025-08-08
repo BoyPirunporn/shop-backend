@@ -6,11 +6,14 @@ import java.util.Set;
 
 import com.backend.shop.infrastructure.entity.BaseEntity;
 import com.backend.shop.infrastructure.entity.ProductEntity;
-import com.backend.shop.infrastructure.entity.ProductOptionEntity;
 import com.backend.shop.infrastructure.entity.ProductOptionValueEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
 
 @Entity(name = "order_item")
 public class OrderItemEntity extends BaseEntity {
@@ -34,52 +37,43 @@ public class OrderItemEntity extends BaseEntity {
     private int quantity;
     private BigDecimal unitPrice;
     private BigDecimal totalPrice;
-
     public OrderEntity getOrder() {
         return order;
     }
-
     public void setOrder(OrderEntity order) {
         this.order = order;
     }
-
+    public ProductEntity getProduct() {
+        return product;
+    }
+    public void setProduct(ProductEntity product) {
+        this.product = product;
+    }
     public Set<ProductOptionValueEntity> getSelectedOptionValues() {
         return selectedOptionValues;
     }
-
     public void setSelectedOptionValues(Set<ProductOptionValueEntity> selectedOptionValues) {
         this.selectedOptionValues = selectedOptionValues;
     }
-
     public int getQuantity() {
         return quantity;
     }
-
     public void setQuantity(int quantity) {
         this.quantity = quantity;
     }
-
     public BigDecimal getUnitPrice() {
         return unitPrice;
     }
-
     public void setUnitPrice(BigDecimal unitPrice) {
         this.unitPrice = unitPrice;
     }
-
     public BigDecimal getTotalPrice() {
         return totalPrice;
     }
-
     public void setTotalPrice(BigDecimal totalPrice) {
         this.totalPrice = totalPrice;
     }
 
-    public ProductEntity getProduct() {
-        return product;
-    }
+    
 
-    public void setProduct(ProductEntity product) {
-        this.product = product;
-    }
 }

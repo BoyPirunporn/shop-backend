@@ -42,7 +42,7 @@ public class ProductUsecase implements IProductUsecase {
     @Override
     @Transactional
     public void createProduct(Product product) {
-        CategoryEntity category = categoryJpaRepository.findByNameContainingIgnoreCase(product.getCategory().getName())
+        CategoryEntity category = categoryJpaRepository.findById(product.getCategory().getId())
                 .orElseThrow(() -> new BaseException("Category not found", HttpStatus.BAD_REQUEST));
 
         ProductEntity _product = productEntityMapper.toEntity(product);

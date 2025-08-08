@@ -6,6 +6,7 @@ import java.util.List;
 public class Category {
     private Long id;
     private String name;
+    private String slug;
     private String imageUrl;
     private Category parent;
     private List<Category> children;
@@ -83,5 +84,13 @@ public class Category {
                 ", name='" + name + '\'' +
                 ", imageUrl='" + imageUrl + '\'' +
                 '}';
+    }
+
+    public String getSlug() {
+        return slug;
+    }
+
+    public void setSlug(String slug) {
+        this.slug = slug;
     }
 }

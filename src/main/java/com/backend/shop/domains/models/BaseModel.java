@@ -25,6 +25,11 @@ public class BaseModel {
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
     }
+    public BaseModel(Long id) {
+        this.id = id;
+    }
+    public BaseModel() {
+    }
 
     
     

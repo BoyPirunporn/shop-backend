@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.backend.shop.applications.dto.category.CategoryDTO;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 public class ProductDTO {
@@ -13,7 +14,7 @@ public class ProductDTO {
     private String description;
     private BigDecimal price;
     private String mainImage;
-    private String category;
+    private CategoryDTO category;
     private List<ProductOptionDTO> productOptions = new ArrayList<>();
 
     @JsonFormat(pattern = "dd/MM/yyyy")
@@ -48,10 +49,10 @@ public class ProductDTO {
     public void setMainImage(String mainImage) {
         this.mainImage = mainImage;
     }
-    public String getCategory() {
+    public CategoryDTO getCategory() {
         return category;
     }
-    public void setCategory(String category) {
+    public void setCategory(CategoryDTO category) {
         this.category = category;
     }
 

@@ -23,8 +23,10 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
+@Slf4j
 public class FilterJwtImp extends OncePerRequestFilter implements IFilterJwt {
 
     private static final List<String> EXCLUDED_URLS = List.of(
@@ -54,7 +56,7 @@ public class FilterJwtImp extends OncePerRequestFilter implements IFilterJwt {
     @Override
     protected boolean shouldNotFilter(@SuppressWarnings("null") HttpServletRequest request) throws ServletException {
         String path = request.getRequestURI();
-        System.out.println("MATCH : " + EXCLUDED_URLS.stream().anyMatch(path::matches));
+        //log.info("MATCH : " + EXCLUDED_URLS.stream().anyMatch(path::matches));
         return EXCLUDED_URLS.stream()
                 .anyMatch(url -> url.endsWith("/*") ? path.startsWith(url.replace("/*", "")) : path.equals(url));
     }
@@ -73,7 +75,7 @@ public class FilterJwtImp extends OncePerRequestFilter implements IFilterJwt {
             return;
         }
 
-        System.out.println("URI " + uri);
+        //log.info("URI " + uri);
         String headerToken = request.getHeader("Authorization");
 
         if (isTokenInvalid(headerToken)) {
@@ -91,7 +93,7 @@ public class FilterJwtImp extends OncePerRequestFilter implements IFilterJwt {
             }
             filterChain.doFilter(request, response);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            //log.info(e.getMessage());
             resolver.resolveException(request, response, null,
                     new JwtException(e.getMessage(), HttpStatus.UNAUTHORIZED));
         }

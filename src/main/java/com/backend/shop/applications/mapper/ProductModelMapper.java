@@ -11,13 +11,13 @@ import org.mapstruct.Named;
 @Mapper(componentModel = "spring")
 public interface ProductModelMapper {
 
-    @Mapping(target = "category",source = "category",qualifiedByName = "categoryStringToModel")
+    @Mapping(target = "category",source = "category")
     Product toModel(ProductDTO dto);
-    @Mapping(target = "category",source = "category",qualifiedByName = "categoryModelToString")
+    @Mapping(target = "category",source = "category")
     ProductDTO toDTO(Product model);
 
     @Mapping(target = "mainImage",ignore = true)
-    @Mapping(target = "category",source = "category",qualifiedByName = "categoryStringToModel")
+    @Mapping(target = "category",source = "category")
     @Mapping(target = "productOptions",ignore = true)
     Product toModel(ProductRequestDTO requestDTO);
 

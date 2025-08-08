@@ -11,7 +11,7 @@ public class ResponseDataTable<T> extends BaseResponse {
     private Integer page;
     private Integer size;
 
-    public ResponseDataTable(int status,List<T> payload,Long count,Integer page,Integer size) {
+    public ResponseDataTable(int status, List<T> payload, Long count, Integer page, Integer size) {
         super(status);
         this.payload = payload;
         this.count = count;

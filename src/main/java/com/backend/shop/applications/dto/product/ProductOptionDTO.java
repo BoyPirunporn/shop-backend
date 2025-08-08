@@ -12,6 +12,11 @@ public class ProductOptionDTO {
     private Boolean enableImage;
     @NotBlank
     private String name;
+    private boolean oneMustBeChosen;
+
+    private boolean manyCanBeChosen;
+
+    private int lengthSelect;
     @NotEmpty
     private List<ProductOptionValueDTO> productOptionValues = new ArrayList<>();
 
@@ -44,4 +49,24 @@ public class ProductOptionDTO {
     public void setEnableImage(Boolean enableImage) {
         this.enableImage = enableImage;
     }
+    public boolean isOneMustBeChosen() {
+        return oneMustBeChosen;
+    }
+    public void setOneMustBeChosen(boolean oneMustBeChosen) {
+        this.oneMustBeChosen = oneMustBeChosen;
+    }
+    public boolean isManyCanBeChosen() {
+        return manyCanBeChosen;
+    }
+    public void setManyCanBeChosen(boolean manyCanBeChosen) {
+        this.manyCanBeChosen = manyCanBeChosen;
+    }
+    public int getLengthSelect() {
+        return lengthSelect;
+    }
+    public void setLengthSelect(int lengthSelect) {
+        this.lengthSelect = lengthSelect;
+    }
+
+    
 }

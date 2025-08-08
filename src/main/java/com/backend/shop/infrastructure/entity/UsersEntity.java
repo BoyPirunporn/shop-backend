@@ -11,17 +11,18 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import com.backend.shop.domains.enums.ERole;
 
-import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
 
 @Entity(name = "users")
 public class UsersEntity extends BaseEntity implements UserDetails {
 
     private String email;
     private String password;
+    private String firstName;
+    private String lastName;
+    private String image;
 
     @Enumerated(EnumType.STRING)
     private Set<ERole> roles = new HashSet<>();
@@ -41,12 +42,12 @@ public class UsersEntity extends BaseEntity implements UserDetails {
     public void setPassword(String password) {
         this.password = password;
     }
+
     @Override
     public String getUsername() {
         return this.email;
     }
 
-    
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return roles.stream()
@@ -61,6 +62,37 @@ public class UsersEntity extends BaseEntity implements UserDetails {
 
     public void setRoles(Set<ERole> roles) {
         this.roles = roles;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    @Override
+    public String toString() {
+        return "UsersEntity [id=" + getId() + ", email=" + email + ", password=" + password + ", firstName=" + firstName
+                + ", lastName="
+                + lastName + ", image=" + image + ", roles=" + roles + "]";
     }
 
 }

@@ -6,16 +6,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import com.backend.shop.applications.dto.product.request.ProductOptionRequest;
-import com.backend.shop.applications.dto.product.request.ProductOptionValueRequest;
-import com.backend.shop.domains.datatable.product.ProductFilter;
-import com.backend.shop.domains.models.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.backend.shop.applications.dto.product.ProductDTO;
 import com.backend.shop.applications.dto.product.ProductVariantOptionDTO;
+import com.backend.shop.applications.dto.product.request.ProductOptionRequest;
+import com.backend.shop.applications.dto.product.request.ProductOptionValueRequest;
 import com.backend.shop.applications.dto.product.request.ProductRequestDTO;
 import com.backend.shop.applications.dto.product.request.ProductVariantRequestDTO;
 import com.backend.shop.applications.interfaces.IFileService;
@@ -23,10 +21,20 @@ import com.backend.shop.applications.interfaces.IProductService;
 import com.backend.shop.applications.mapper.ProductModelMapper;
 import com.backend.shop.domains.datatable.DataTableFilter;
 import com.backend.shop.domains.datatable.ResponseDataTable;
+import com.backend.shop.domains.datatable.product.ProductFilter;
+import com.backend.shop.domains.models.Product;
+import com.backend.shop.domains.models.ProductOption;
+import com.backend.shop.domains.models.ProductOptionValue;
+import com.backend.shop.domains.models.ProductVariant;
+import com.backend.shop.domains.models.ProductVariantOption;
+import com.backend.shop.domains.models.VariantImage;
 import com.backend.shop.domains.usecase.IProductUsecase;
 import com.backend.shop.infrastructure.exceptions.BaseException;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Service
+@Slf4j
 public class ProductServiceImpl implements IProductService {
 
     private final IProductUsecase productUsecase;
@@ -72,7 +80,7 @@ public class ProductServiceImpl implements IProductService {
     @Override
     public void createProduct(ProductRequestDTO product) throws IOException {
         Product productModel = productModelMapper.toModel(product);
-         System.out.println("Product Id : " + product.getId());
+         //log.info("Product Id : " + product.getId());
 
          if (product.getMainImage() != null && product.getMainImage() instanceof MultipartFile) {
              MultipartFile mainImage = (MultipartFile) product.getMainImage();
@@ -88,8 +96,7 @@ public class ProductServiceImpl implements IProductService {
          List<ProductOption> productOption = createProductOption(product.getProductOptions(), productModel);
          // ตั้งค่าผลิตภัณฑ์
          productModel.setProductOptions(productOption);
-         System.out.println("getProductOptions : " + productModel.getProductOptions().get(0)
-                 .getProductOptionValues().get(0).getValue());
+         //log.info("getProductOptions : " + productModel.getProductOptions().get(0).getProductOptionValues().get(0).getValue());
          productUsecase.createProduct(productModel);
     }
 
@@ -133,7 +140,7 @@ public class ProductServiceImpl implements IProductService {
     @Override
     public void updateProduct(ProductRequestDTO product) throws IOException {
         Product productModel = productModelMapper.toModel(product);
-        // System.out.println("SIZE : " + product.getProductVariants().size());
+        // //log.info("SIZE : " + product.getProductVariants().size());
         // UUID uid = UUID.randomUUID();
         // if (product.getMainImage() instanceof MultipartFile) {
         //     MultipartFile mainImage = (MultipartFile) product.getMainImage();

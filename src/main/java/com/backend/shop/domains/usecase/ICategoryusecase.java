@@ -3,6 +3,10 @@ package com.backend.shop.domains.usecase;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
+import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
+
 import com.backend.shop.domains.datatable.DataTableFilter;
 import com.backend.shop.domains.models.Category;
 
@@ -16,7 +20,8 @@ public interface ICategoryusecase {
 
     Category getByName(String name);
 
-    List<Category> getAllCategory(DataTableFilter dataTableFilter);
+    Page<Category> getAllCategory(DataTableFilter dataTableFilter);
+    DataTablesOutput<Category> getAllCategory(DataTablesInput dataTableFilter);
 
     Long countCategory();
 
@@ -24,5 +29,6 @@ public interface ICategoryusecase {
 
     Optional<Category> getByParentId(Long id);
     List<Category> getAllCategoryByParentParentIsNull();
+    List<Category> getAllCategoryByParentIsNull();
 
 }

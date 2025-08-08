@@ -9,21 +9,24 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.backend.shop.applications.dto.activityLog.ActivityLogDTO;
 import com.backend.shop.applications.dto.auth.AuthDTO;
 import com.backend.shop.applications.dto.auth.SignInDTO;
 import com.backend.shop.applications.dto.auth.TokenDTO;
+import com.backend.shop.applications.interfaces.IActivityLogService;
 import com.backend.shop.applications.interfaces.IAuthService;
 import com.backend.shop.domains.ResponseWithPayload;
 import com.backend.shop.infrastructure.exceptions.BaseException;
 
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 
 @RestController
+@Slf4j
 @RequestMapping("${application.api.prefix}/auth")
 public class AuthController {
 
     private final IAuthService authService;
-
     public AuthController(IAuthService authService) {
         this.authService = authService;
     }
@@ -48,13 +51,13 @@ public class AuthController {
 
     @PostMapping("refresh-token")
     public ResponseEntity<ResponseWithPayload<TokenDTO>> refreshToken(@RequestBody Map<String, String> body) {
-        System.out.println(body.toString());
+        //log.info(body.toString());
         if (!body.containsKey("refreshToken")) {
             throw new BaseException("Unauthorized", HttpStatus.UNAUTHORIZED);
         }
         TokenDTO token = authService.refreshToken(body.get("refreshToken"));
-        System.out.println(token.getRefreshToken());
-        System.out.println("REFRESH TOKEN : "+token.toString());
+        //log.info(token.getRefreshToken());
+        //log.info("REFRESH TOKEN : "+token.toString());
         return ResponseEntity.ok(new ResponseWithPayload<>(200, token));
     }
 

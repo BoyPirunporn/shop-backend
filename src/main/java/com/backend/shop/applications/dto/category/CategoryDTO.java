@@ -5,6 +5,7 @@ import java.util.List;
 public class CategoryDTO {
     private Long id;
     private String name;
+    private String slug;
     private String imageUrl;
     private CategoryDTO parent;
 
@@ -52,4 +53,13 @@ public class CategoryDTO {
     public void setChildren(List<CategoryDTO> children) {
         this.children = children;
     }
+
+    public String getSlug() {
+        return slug;
+    }
+
+    public void setSlug(String slug) {
+        this.slug = slug;
+    }
+    
 }

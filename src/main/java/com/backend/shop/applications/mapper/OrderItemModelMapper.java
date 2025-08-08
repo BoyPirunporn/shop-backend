@@ -16,6 +16,6 @@ public interface OrderItemModelMapper {
     OrderItem toModel(OrderItemDTO dto);
 
     
-    @Mapping(target = "product.category",source = "product.category.name")
+    @Mapping(target = "product.category",source = "product.category")
     OrderItemDTO toDTO(OrderItem model);
 }

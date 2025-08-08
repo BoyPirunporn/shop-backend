@@ -3,15 +3,16 @@ package com.backend.shop.applications.mapper;
 import java.util.List;
 
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 import com.backend.shop.applications.dto.category.CategoryDTO;
 import com.backend.shop.domains.models.Category;
-import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 public interface CategoryModelMapper {
 
 
+    @Mapping(target = "products",ignore = true)
     Category toModel(CategoryDTO dto);
 
     CategoryDTO toDTO(Category model);

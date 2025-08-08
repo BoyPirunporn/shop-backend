@@ -51,5 +51,14 @@ public abstract class BaseEntity {
         this.id = id;
     }
 
+    public BaseEntity() {
+    }
+
+    public BaseEntity(Long id) {
+        this.id = id;
+    }
+
+    
+
     
 }

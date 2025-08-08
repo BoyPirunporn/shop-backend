@@ -8,6 +8,11 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
+import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -27,12 +32,13 @@ import com.backend.shop.infrastructure.exceptions.BaseException;
 @Service
 public class CategoryServiceImpl implements ICategoryService {
 
+    private static final Logger logger = LoggerFactory.getLogger(CategoryServiceImpl.class);
     private final ICategoryusecase categoryUsecase;
     private final CategoryModelMapper categoryMapper;
     private final IFileService fileService;
 
     public CategoryServiceImpl(ICategoryusecase categoryUsecase, CategoryModelMapper categoryMapper,
-                               IFileService fileService) {
+            IFileService fileService) {
         this.categoryUsecase = categoryUsecase;
         this.categoryMapper = categoryMapper;
         this.fileService = fileService;
@@ -40,14 +46,15 @@ public class CategoryServiceImpl implements ICategoryService {
 
     @Override
     public ResponseDataTable<CategoryDTO> getAllCategory(DataTableFilter filter) {
-        List<CategoryDTO> categories = categoryUsecase.getAllCategory(filter).stream().map(categoryMapper::toDTO).toList();
-        Long count = categoryUsecase.countCategory();
-        return new ResponseDataTable<>(200, categories, count, filter.getPage(), filter.getSize());
+        Page<Category> pageCategories = categoryUsecase.getAllCategory(filter);
+        return new ResponseDataTable<>(200, pageCategories.map(categoryMapper::toDTO).toList(),
+                (long) pageCategories.getTotalElements(), filter.getPage(), filter.getSize());
     }
 
     @Override
     public CategoryDTO getCategoryById(Long id) {
-        return categoryMapper.toDTO(categoryUsecase.getCategoryById(id).orElseThrow(() -> new BaseException("Data not found", HttpStatus.BAD_REQUEST)));
+        return categoryMapper.toDTO(categoryUsecase.getCategoryById(id)
+                .orElseThrow(() -> new BaseException("Data not found", HttpStatus.BAD_REQUEST)));
     }
 
     @Override
@@ -70,10 +77,12 @@ public class CategoryServiceImpl implements ICategoryService {
     @Override
     public void updateCategory(CategoryRequest category) throws IOException {
         try {
-//            Category cModel = null;
-//            if (category.getParentId() != null) {
-//                cModel = categoryUsecase.getCategoryById(category.getParentId()).orElseThrow(() -> new BaseException("Parent not found", HttpStatus.BAD_REQUEST));
-//            }
+            // Category cModel = null;
+            // if (category.getParentId() != null) {
+            // cModel =
+            // categoryUsecase.getCategoryById(category.getParentId()).orElseThrow(() -> new
+            // BaseException("Parent not found", HttpStatus.BAD_REQUEST));
+            // }
             Category model = mapToCategory(category, null);
             categoryUsecase.updateCategory(model);
         } catch (BaseException ex) {
@@ -93,14 +102,14 @@ public class CategoryServiceImpl implements ICategoryService {
             String saveFile = uploadImage((MultipartFile) req.getImageUrl());
             cate.setImageUrl(saveFile);
         } else {
-            if(req.getImageUrl() != null ){
-                System.out.println("REQUEST IS NOT NULL : " + req.getImageUrl());
+            if (req.getImageUrl() != null) {
+                logger.debug("REQUEST IS NOT NULL : " + req.getImageUrl());
                 cate.setImageUrl((String) req.getImageUrl());
-            }else if(parent != null){
-                System.out.println("PARENT IS NOT NULL : " + parent.getImageUrl());
+            } else if (parent != null) {
+                logger.debug("PARENT IS NOT NULL : " + parent.getImageUrl());
                 cate.setImageUrl(parent.getImageUrl());
-            }else {
-                System.out.println("BOTH IS NULL");
+            } else {
+                logger.debug("BOTH IS NULL");
                 cate.setImageUrl(null);
             }
         }
@@ -119,7 +128,6 @@ public class CategoryServiceImpl implements ICategoryService {
 
         cate.setChildren(children); // กำหนด children ให้ category
 
-
         return cate;
     }
 
@@ -134,6 +142,25 @@ public class CategoryServiceImpl implements ICategoryService {
 
     @Override
     public ResponseWithPayload<List<CategoryDTO>> getAllCategoryWithPayload(DataTableFilter filter) {
-       return new ResponseWithPayload<>(200,categoryUsecase.getAllCategoryByParentParentIsNull().stream().map(categoryMapper::toDTO).collect(Collectors.toList()));
+        return new ResponseWithPayload<>(200, categoryUsecase.getAllCategoryByParentIsNull().stream()
+                .map(categoryMapper::toDTO).collect(Collectors.toList()));
+    }
+
+    @Override
+    public DataTablesOutput<CategoryDTO> findAll(DataTablesInput input) {
+        DataTablesOutput<Category> output = categoryUsecase.getAllCategory(input);
+
+        DataTablesOutput<CategoryDTO> result = new DataTablesOutput<>();
+        result.setRecordsFiltered(output.getRecordsFiltered());
+        result.setRecordsTotal(output.getRecordsTotal());
+        result.setError(output.getError());
+
+        // map entities to models
+        result.setData(
+                output.getData()
+                        .stream()
+                        .map(categoryMapper::toDTO) // <- แปลงแต่ละ entity ไป model
+                        .toList());
+        return result;
     }
 }

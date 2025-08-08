@@ -2,7 +2,6 @@ package com.backend.shop.infrastructure.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -11,11 +10,13 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.backend.shop.domains.enums.ERole;
-import com.backend.shop.infrastructure.exceptions.BaseException;
 import com.backend.shop.infrastructure.jwt.interfaces.IFilterJwt;
+
+import lombok.extern.slf4j.Slf4j;
 
 @Configuration
 @EnableWebSecurity
+@Slf4j
 public class SecurityConfig {
 
     private final IFilterJwt filterJwt;
@@ -34,6 +35,7 @@ public class SecurityConfig {
             "/v3/api-docs/**", // ✅ อนุญาต API Docs ทั้งหมด
             "/api/v1/products/**",
             "/api/v1/category/**",
+            "/api/v1/menu/**",
     };
 
     @Bean
@@ -51,7 +53,7 @@ public class SecurityConfig {
                 .authenticationProvider(authenticationProvider)
                 .exceptionHandling((accessDenied) -> {
                     accessDenied.accessDeniedHandler((request, response, accessDeniedException) -> {
-                        System.out.println("MESSAGE ACCESS DENIED : " + accessDeniedException.getMessage());
+                        //log.info("MESSAGE ACCESS DENIED : " + accessDeniedException.getMessage());
                         accessDeniedException.printStackTrace();
                         response.setStatus(403);
                         response.getWriter().write(accessDeniedException.getMessage());

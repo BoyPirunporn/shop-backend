@@ -5,6 +5,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.data.annotation.CreatedDate;
+
 import com.backend.shop.domains.enums.enumOrder.EOrderStatus;
 import com.backend.shop.infrastructure.entity.BaseEntity;
 import com.backend.shop.infrastructure.entity.UsersEntity;
@@ -19,7 +21,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
-import org.springframework.data.annotation.CreatedDate;
 
 @Entity(name = "orders")
 public class OrderEntity extends BaseEntity {
@@ -71,20 +72,12 @@ public class OrderEntity extends BaseEntity {
         this.discount = discount;
     }
 
-    public EOrderStatus getStatus() {
-        return status;
+    public LocalDateTime getOrderDate() {
+        return orderDate;
     }
 
-    public void setStatus(EOrderStatus status) {
-        this.status = status;
-    }
-
-    public ShippingAddress getShippingAddress() {
-        return shippingAddress;
-    }
-
-    public void setShippingAddress(ShippingAddress shippingAddress) {
-        this.shippingAddress = shippingAddress;
+    public void setOrderDate(LocalDateTime orderDate) {
+        this.orderDate = orderDate;
     }
 
     public List<OrderItemEntity> getOrderItems() {
@@ -103,12 +96,21 @@ public class OrderEntity extends BaseEntity {
         this.payment = payment;
     }
 
-    public LocalDateTime getOrderDate() {
-        return orderDate;
+    public EOrderStatus getStatus() {
+        return status;
     }
 
-    public void setOrderDate(LocalDateTime orderDate) {
-        this.orderDate = orderDate;
+    public void setStatus(EOrderStatus status) {
+        this.status = status;
     }
 
+    public ShippingAddress getShippingAddress() {
+        return shippingAddress;
+    }
+
+    public void setShippingAddress(ShippingAddress shippingAddress) {
+        this.shippingAddress = shippingAddress;
+    }
+
+    
 }

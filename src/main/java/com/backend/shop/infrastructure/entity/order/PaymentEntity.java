@@ -50,8 +50,6 @@ public class PaymentEntity extends BaseEntity {
     public void setPaymentStatus(EPaymentStatus paymentStatus) {
         this.paymentStatus = paymentStatus;
     }
-
     
-
-
+    
 }

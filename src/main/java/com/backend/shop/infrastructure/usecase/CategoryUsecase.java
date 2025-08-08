@@ -5,8 +5,12 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
+import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 import org.springframework.stereotype.Service;
 
 import com.backend.shop.domains.datatable.DataTableFilter;
@@ -43,8 +47,7 @@ public class CategoryUsecase implements ICategoryusecase {
         entity.setParent(parent);
         entity.setImageUrl(
                 (model.getImageUrl() != null) ? model.getImageUrl()
-                : (parent != null ? parent.getImageUrl() : null)
-        );
+                        : (parent != null ? parent.getImageUrl() : null));
         // ตรวจสอบ children และ map พวกมัน
         List<CategoryEntity> children = Optional.ofNullable(model.getChildren())
                 .orElse(Collections.emptyList()) // ป้องกัน NPE
@@ -77,9 +80,9 @@ public class CategoryUsecase implements ICategoryusecase {
     }
 
     @Override
-    public List<Category> getAllCategory(DataTableFilter filter) {
+    public Page<Category> getAllCategory(DataTableFilter filter) {
         Pageable pageable = PageRequest.of(filter.getPage(), filter.getSize());
-        return categoryRepository.findAllByParentIsNull(pageable).stream().map(categoryEntityMapper::toModel).toList();
+        return categoryRepository.findAllByParentIsNull(pageable).map(categoryEntityMapper::toModel);
     }
 
     @Override
@@ -99,6 +102,33 @@ public class CategoryUsecase implements ICategoryusecase {
 
     @Override
     public List<Category> getAllCategoryByParentParentIsNull() {
-        return categoryRepository.findAllByParentIsNotNullAndParentParentIsNull().stream().map(categoryEntityMapper::toModel).toList();
+        return categoryRepository.findAllByParentIsNotNullAndParentParentIsNull().stream()
+                .map(categoryEntityMapper::toModel).toList();
+    }
+
+    @Override
+    public List<Category> getAllCategoryByParentIsNull() {
+        return categoryRepository.getAllCategoryByParentIsNull().stream().map(categoryEntityMapper::toModel).toList();
+    }
+
+    @Override
+    @Cacheable(cacheNames = "get-category",keyGenerator = "customKeyGenerator")
+    public DataTablesOutput<Category> getAllCategory(DataTablesInput dataTableFilter) {
+        DataTablesOutput<CategoryEntity> output = categoryRepository.findAll(dataTableFilter);
+
+        DataTablesOutput<Category> result = new DataTablesOutput<>();
+        result.setDraw(output.getDraw());
+        result.setRecordsFiltered(output.getRecordsFiltered());
+        result.setRecordsTotal(output.getRecordsTotal());
+        result.setError(output.getError());
+
+        // map entities to models
+        result.setData(
+                output.getData()
+                        .stream()
+                        .map(categoryEntityMapper::toModel) // <- แปลงแต่ละ entity ไป model
+                        .toList());
+
+        return result;
     }
 }

@@ -1,6 +1,5 @@
 package com.backend.shop.infrastructure.jwt.services;
 
-import java.util.Arrays;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -16,7 +15,10 @@ import org.springframework.stereotype.Service;
 import com.backend.shop.infrastructure.entity.UsersEntity;
 import com.backend.shop.infrastructure.repository.UserJapRepoitory;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Service
+@Slf4j
 public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Autowired
@@ -33,7 +35,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 .map(role -> new SimpleGrantedAuthority(role.name()))
                 .collect(Collectors.toSet());
 
-                System.out.println("AUTH : "+authorities.toString());
+                //log.info("AUTH : "+authorities.toString());
         return new User(
                 user.getEmail(),
                 user.getPassword(),

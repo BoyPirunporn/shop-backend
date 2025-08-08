@@ -22,8 +22,10 @@ import com.backend.shop.infrastructure.repository.OrderJpaRepository;
 import com.backend.shop.infrastructure.repository.UserJapRepoitory;
 
 import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
+@Slf4j
 public class OrderUsecase implements IOrderUsecase {
 
     private final OrderJpaRepository orderRepository;
@@ -56,7 +58,7 @@ public class OrderUsecase implements IOrderUsecase {
         }
         orderEntity.getPayment().setOrder(orderEntity);
 
-        System.out.println(orderEntity.getPayment().getPaymentMethod());
+        //log.info("orderEntity -> {}", orderEntity.getPayment().getPaymentMethod());
         orderRepository.save(orderEntity);
     }
 

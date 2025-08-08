@@ -1,13 +1,11 @@
 package com.backend.shop.infrastructure.mapper;
 
-import java.util.List;
-
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.Named;
 
 import com.backend.shop.domains.models.Category;
 import com.backend.shop.infrastructure.entity.CategoryEntity;
-import org.mapstruct.Mapping;
-import org.mapstruct.Named;
 
 @Mapper(componentModel = "spring" )
 public interface CategoryEntityMapper {
@@ -32,4 +30,5 @@ public interface CategoryEntityMapper {
         return new Category(parent.getId(),parent.getName(),parent.getImageUrl());
     }
 
+    
 }

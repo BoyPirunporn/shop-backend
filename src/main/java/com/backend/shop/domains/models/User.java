@@ -7,8 +7,13 @@ import com.backend.shop.domains.enums.ERole;
 public class User {
     private Long id;
     private String email;
+    private String firstName;
+    private String lastName;
+    private String image;
     private String password;
     private Set<ERole> roles;
+
+    
     public Long getId() {
         return id;
     }
@@ -51,6 +56,24 @@ public class User {
     @Override
     public String toString() {
         return "User [id=" + id + ", email=" + email + ", password=" + password + ", roles=" + roles + "]";
+    }
+    public String getFirstName() {
+        return firstName;
+    }
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+    public String getLastName() {
+        return lastName;
+    }
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+    public String getImage() {
+        return image;
+    }
+    public void setImage(String image) {
+        this.image = image;
     }
     
 }

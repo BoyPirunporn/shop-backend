@@ -3,6 +3,9 @@ package com.backend.shop.applications.interfaces;
 import java.io.IOException;
 import java.util.List;
 
+import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
+import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
+
 import com.backend.shop.applications.dto.category.CategoryDTO;
 import com.backend.shop.applications.dto.category.request.CategoryRequest;
 import com.backend.shop.domains.ResponseWithPayload;
@@ -17,4 +20,5 @@ public interface ICategoryService {
     ResponseDataTable<CategoryDTO> getAllCategory(DataTableFilter filter);
     ResponseWithPayload<List<CategoryDTO>> getAllCategoryWithPayload(DataTableFilter filter);
     CategoryDTO getCategoryById(Long id);
+    DataTablesOutput<CategoryDTO> findAll(DataTablesInput input);
 }

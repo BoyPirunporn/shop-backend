@@ -5,6 +5,7 @@ import java.util.List;
 public class CategoryRequest {
     private Long id;
     private String name;
+    private String slug;
     private Object imageUrl;
     private Long parentId;
     private List<CategoryRequest> children;
@@ -38,6 +39,13 @@ public class CategoryRequest {
     public void setChildren(List<CategoryRequest> children) {
         this.children = children;
     }
+    public String getSlug() {
+        return slug;
+    }
+    public void setSlug(String slug) {
+        this.slug = slug;
+    }
 
+    
     
 }

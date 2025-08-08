@@ -11,12 +11,12 @@ import com.backend.shop.infrastructure.mapper.AuthMapper;
 import com.backend.shop.infrastructure.repository.UserJapRepoitory;
 
 @Service
-public class AuthUsecase implements IAuthUsecase {
+public class AuthUseCase implements IAuthUsecase {
 
     private final AuthMapper authMapper;
     private final UserJapRepoitory userJapRepoitory;
 
-    public AuthUsecase(UserJapRepoitory userJapRepoitory, AuthMapper authMapper) {
+    public AuthUseCase(UserJapRepoitory userJapRepoitory, AuthMapper authMapper) {
         this.userJapRepoitory = userJapRepoitory;
         this.authMapper = authMapper;
     }

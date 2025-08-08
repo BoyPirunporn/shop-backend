@@ -23,6 +23,7 @@ public class CategoryEntity extends BaseEntity {
     private String name;
 
     private String imageUrl;
+    private String slug;
     @ManyToOne
     @JoinColumn(name = "parent_id")
     @JsonIgnore
@@ -88,4 +89,11 @@ public class CategoryEntity extends BaseEntity {
                 ", imageUrl='" + imageUrl + '\'' +
                 '}';
     }
+    public String getSlug() {
+        return slug;
+    }
+    public void setSlug(String slug) {
+        this.slug = slug;
+    }
+    
 }
