@@ -3,6 +3,8 @@ package com.backend.shop.infrastructure.usecase;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -12,28 +14,27 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import com.backend.shop.domains.models.orders.Order;
-import com.backend.shop.domains.usecase.IOrderUsecase;
+import com.backend.shop.domains.usecase.IOrderUseCase;
 import com.backend.shop.infrastructure.entity.UsersEntity;
 import com.backend.shop.infrastructure.entity.order.OrderEntity;
 import com.backend.shop.infrastructure.entity.order.OrderItemEntity;
 import com.backend.shop.infrastructure.exceptions.BaseException;
 import com.backend.shop.infrastructure.mapper.orders.OrderEntityMapper;
 import com.backend.shop.infrastructure.repository.OrderJpaRepository;
-import com.backend.shop.infrastructure.repository.UserJapRepoitory;
+import com.backend.shop.infrastructure.repository.UserJapRepository;
 
 import jakarta.transaction.Transactional;
-import lombok.extern.slf4j.Slf4j;
 
 @Service
-@Slf4j
-public class OrderUsecase implements IOrderUsecase {
+public class OrderUseCase implements IOrderUseCase {
+private static final Logger log = LoggerFactory.getLogger(OrderUseCase.class);
 
     private final OrderJpaRepository orderRepository;
-    private final UserJapRepoitory userJapRepoitory;
+    private final UserJapRepository userJapRepoitory;
     private final OrderEntityMapper orderEntityMapper;
 
-    public OrderUsecase(OrderJpaRepository orderRepository, OrderEntityMapper orderEntityMapper,
-            UserJapRepoitory userJapRepoitory) {
+    public OrderUseCase(OrderJpaRepository orderRepository, OrderEntityMapper orderEntityMapper,
+            UserJapRepository userJapRepoitory) {
         this.orderRepository = orderRepository;
         this.orderEntityMapper = orderEntityMapper;
         this.userJapRepoitory = userJapRepoitory;

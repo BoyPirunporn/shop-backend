@@ -4,6 +4,9 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.interceptor.KeyGenerator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,18 +25,20 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.backend.shop.infrastructure.jwt.exceptions.JwtException;
-import com.backend.shop.infrastructure.repository.UserJapRepoitory;
-
-import lombok.extern.slf4j.Slf4j;
+import com.backend.shop.infrastructure.repository.UserJapRepository;
 
 @Configuration
-@Slf4j
 @EnableJpaRepositories(repositoryFactoryBeanClass = DataTablesRepositoryFactoryBean.class, basePackages = "com.backend.shop.infrastructure.repository")
 public class AppConfig {
+    private static final Logger log = LoggerFactory.getLogger(AppConfig.class);
 
-    private final UserJapRepoitory userJapRepoitory;
 
-    public AppConfig(UserJapRepoitory userJapRepoitory) {
+    @Value("${application.security.password.salt}")
+    private String saltPassword;
+
+    private final UserJapRepository userJapRepoitory;
+
+    public AppConfig(UserJapRepository userJapRepoitory) {
         this.userJapRepoitory = userJapRepoitory;
     }
 
@@ -58,36 +63,49 @@ public class AppConfig {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+        String salt = saltPassword; // ควรเก็บใน config/secret
+        return new PasswordEncoder() {
+            private final BCryptPasswordEncoder delegate = new BCryptPasswordEncoder();
+
+            @Override
+            public String encode(CharSequence rawPassword) {
+                String encode = delegate.encode(salt + rawPassword);
+                return encode;
+            }
+
+            @Override
+            public boolean matches(CharSequence rawPassword, String encodedPassword) {
+                return delegate.matches(salt + rawPassword, encodedPassword);
+            }
+        };
     }
 
-   @Bean
-public KeyGenerator customKeyGenerator() {
-    return (target, method, params) -> {
-        DataTablesInput input = (DataTablesInput) params[0];
+    @Bean
+    public KeyGenerator customKeyGenerator() {
+        return (target, method, params) -> {
+            DataTablesInput input = (DataTablesInput) params[0];
 
-        // global search value
-        String globalSearch = input.getSearch() != null ? input.getSearch().getValue() : "";
+            // global search value
+            String globalSearch = input.getSearch() != null ? input.getSearch().getValue() : "";
 
-        // columns + column search values
-        String columnsKey = input.getColumns().stream()
-            .map(col -> col.getData() + "=" + (col.getSearch() != null ? col.getSearch().getValue() : ""))
-            .sorted() // เรียงลำดับ เพื่อให้ key เป็น deterministic
-            .collect(Collectors.joining(","));
+            // columns + column search values
+            String columnsKey = input.getColumns().stream()
+                    .map(col -> col.getData() + "=" + (col.getSearch() != null ? col.getSearch().getValue() : ""))
+                    .sorted() // เรียงลำดับ เพื่อให้ key เป็น deterministic
+                    .collect(Collectors.joining(","));
 
-        log.info(columnsKey);
+            log.info(columnsKey);
 
-        int key = Objects.hash(
-            input.getDraw(),
-            input.getStart(),
-            input.getLength(),
-            globalSearch,
-            columnsKey
-        );
-        System.out.println("KEY -> " + key);
-        // รวม fields สำคัญทั้งหมดเป็น key
-        return key;
-    };
-}
+            int key = Objects.hash(
+                    input.getDraw(),
+                    input.getStart(),
+                    input.getLength(),
+                    globalSearch,
+                    columnsKey);
+            System.out.println("KEY -> " + key);
+            // รวม fields สำคัญทั้งหมดเป็น key
+            return key;
+        };
+    }
 
 }

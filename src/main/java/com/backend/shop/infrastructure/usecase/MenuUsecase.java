@@ -1,49 +1,91 @@
 package com.backend.shop.infrastructure.usecase;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
-import org.springframework.data.jpa.datatables.mapping.Search;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import com.backend.shop.domains.models.Category;
 import com.backend.shop.domains.models.MenuItem;
-import com.backend.shop.domains.usecase.IMenuUsecase;
-import com.backend.shop.infrastructure.entity.CategoryEntity;
+import com.backend.shop.domains.models.MenuItemBasic;
+import com.backend.shop.domains.usecase.IMenuUseCase;
 import com.backend.shop.infrastructure.entity.MenuItemEntity;
+import com.backend.shop.infrastructure.entity.RoleEntity;
+import com.backend.shop.infrastructure.entity.UsersEntity;
 import com.backend.shop.infrastructure.exceptions.BaseException;
 import com.backend.shop.infrastructure.mapper.MenuItemMapper;
 import com.backend.shop.infrastructure.repository.MenuItemJpaRepository;
+import com.backend.shop.infrastructure.specification.menu.MenuItemSpecification;
+import com.backend.shop.infrastructure.utility.SecurityUtils;
 
 import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.JoinType;
-import jakarta.persistence.criteria.Predicate;
-import lombok.extern.slf4j.Slf4j;
 
 @Service
-@Slf4j
-public class MenuUsecase implements IMenuUsecase {
+public class MenuUseCase implements IMenuUseCase {
+    private static final Logger log = LoggerFactory.getLogger(MenuUseCase.class);
 
     private final MenuItemJpaRepository menuItemJpaRepository;
     private final MenuItemMapper menuItemMapper;
 
-    public MenuUsecase(MenuItemJpaRepository menuItemJpaRepository, MenuItemMapper menuItemMapper) {
+    public MenuUseCase(MenuItemJpaRepository menuItemJpaRepository, MenuItemMapper menuItemMapper) {
         this.menuItemJpaRepository = menuItemJpaRepository;
         this.menuItemMapper = menuItemMapper;
     }
 
+    
     @Override
-    public List<MenuItem> getMenu() {
-        return menuItemJpaRepository.findRootMenusWithChildren().stream().map(menuItemMapper::toModel)
+    public List<MenuItem> getAllMenu() {
+        return menuItemJpaRepository.findAllByParentIsNull().stream().map(menuItemMapper::toModelWithOutRoleMenuPermission)
+                .collect(Collectors.toList());
+    }
+    
+    @Override
+    public List<MenuItem> getMenuByRole() {
+        UsersEntity user = SecurityUtils.getCurrentUserDetail();
+        log.info("USER -> {}",user.getRoles().toString());
+        Set<Long> roleIds = user != null ? user.getRoles().stream()
+                .map(RoleEntity::getId)
+                .collect(Collectors.toSet()) : new HashSet<>();
+                log.info("ROLEIDS -> {}",roleIds.toString());
+        if (roleIds.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        // 1. Fetch all accessible menu items in a single query to avoid the N+1 problem.
+        List<MenuItemEntity> allAccessibleItems = menuItemJpaRepository
+                .findDistinctByVisibleIsTrueAndRoleMenuPermissions_Role_IdInOrderBySortOrderAsc(roleIds);
+
+        // 2. Build the menu tree in memory for optimal performance.
+        Map<Long, MenuItemEntity> menuMap = allAccessibleItems.stream()
+                .peek(item -> item.setItems(new ArrayList<>())) // Clear existing children to rebuild the hierarchy correctly.
+                .collect(Collectors.toMap(MenuItemEntity::getId, item -> item));
+
+        List<MenuItemEntity> rootNodes = new ArrayList<>();
+        allAccessibleItems.forEach(item -> {
+            MenuItemEntity parent = item.getParent();
+            if (parent != null && menuMap.containsKey(parent.getId())) {
+                // This item is a child of another accessible item.
+                menuMap.get(parent.getId()).getItems().add(item);
+            } else {
+                // This is a root node (either it has no parent or its parent is not accessible).
+                rootNodes.add(item);
+            }
+        });
+
+        return rootNodes.stream().map(menuItemMapper::toModel)
                 .collect(Collectors.toList());
     }
 
@@ -57,32 +99,15 @@ public class MenuUsecase implements IMenuUsecase {
     @Cacheable(cacheNames = "menuDataTable", keyGenerator = "customKeyGenerator")
     public DataTablesOutput<MenuItem> getMenuDataTable(DataTablesInput dataTableFilter) {
         // log.info("GET FIRST");
-        Specification<MenuItemEntity> specCriterial = (root, query, cb) -> {
-            List<Predicate> predicates = new ArrayList<>();
-            // log.info(Arrays.toString(dataTableFilter.getColumns().toArray()));
+        UsersEntity user = SecurityUtils.getCurrentUserDetail();
+        Specification<MenuItemEntity> spec = MenuItemSpecification.createSpecification(dataTableFilter, user);
 
-            dataTableFilter.getColumns().forEach(col -> {
-                String data = col.getData();
-                Search search = col.getSearch();
-                if ("parent".equals(data) && search != null && !search.getValue().isEmpty()) {
-                    if ("isNull".equals(search.getValue())) {
-                        predicates.add(cb.isNull(root.get("parent")));
-                    } else {
-                        predicates.add(cb.equal(root.get("parent").get("id"), Long.parseLong(search.getValue())));
-                    }
-                }
-                if ("title".equals(data) && search != null && !search.getValue().isEmpty()) {
-                    predicates.add(cb.like(cb.lower(root.get("title")), search.getValue().toLowerCase() + "%"));
-                }
-            });
-            return cb.and(predicates.toArray(new Predicate[0]));
-        };
-        // dataTableFilter.setSearch(new Search());
-        DataTablesOutput<MenuItemEntity> output = menuItemJpaRepository.findAll(dataTableFilter, specCriterial);
+        DataTablesOutput<MenuItemEntity> output = menuItemJpaRepository.findAll(dataTableFilter, spec);
         DataTablesOutput<MenuItem> result = new DataTablesOutput<>();
         result.setDraw(output.getDraw());
         result.setRecordsFiltered(output.getRecordsFiltered());
-        result.setRecordsTotal(menuItemJpaRepository.count(specCriterial));
+        // Use count from the output to avoid an extra query
+        result.setRecordsTotal(output.getRecordsTotal());
         result.setError(output.getError());
 
         // map entities to models
@@ -149,6 +174,30 @@ public class MenuUsecase implements IMenuUsecase {
         entity.setItems(children); // กำหนด children ให้ MenuItem
 
         return entity;
+    }
+
+    @Override
+    public DataTablesOutput<MenuItemBasic> getMenuDataTableBasic(DataTablesInput dataTableFilter) {
+        // log.info("GET FIRST");
+        UsersEntity user = SecurityUtils.getCurrentUserDetail();
+        Specification<MenuItemEntity> spec = MenuItemSpecification.createSpecification(dataTableFilter, user);
+
+        DataTablesOutput<MenuItemEntity> output = menuItemJpaRepository.findAll(dataTableFilter, spec);
+        DataTablesOutput<MenuItemBasic> result = new DataTablesOutput<>();
+        result.setDraw(output.getDraw());
+        result.setRecordsFiltered(output.getRecordsFiltered());
+        // Use count from the output to avoid an extra query
+        result.setRecordsTotal(output.getRecordsTotal());
+        result.setError(output.getError());
+
+        // map entities to models
+        result.setData(
+                output.getData()
+                        .stream()
+                        .map(menuItemMapper::toModelBasic) // <- แปลงแต่ละ entity ไป model
+                        .toList());
+
+        return result;
     }
 
 }

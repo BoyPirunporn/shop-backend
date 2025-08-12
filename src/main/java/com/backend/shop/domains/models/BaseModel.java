@@ -28,6 +28,12 @@ public class BaseModel {
     public BaseModel(Long id) {
         this.id = id;
     }
+    
+    public BaseModel(Long id, LocalDateTime createdAt, LocalDateTime updatedAt) {
+        this.id = id;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+    }
     public BaseModel() {
     }
 

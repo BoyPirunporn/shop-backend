@@ -7,13 +7,13 @@ import org.springframework.stereotype.Service;
 import com.backend.shop.applications.dto.dashboard.DashBoardDTO;
 import com.backend.shop.applications.interfaces.IDashboardService;
 import com.backend.shop.domains.models.MonthlyRevenueProjection;
-import com.backend.shop.domains.usecase.IDashboardUsecase;
+import com.backend.shop.domains.usecase.IDashboardUseCase;
 
 @Service
 public class DashboardServiceImpl implements IDashboardService {
-    private final IDashboardUsecase dashboardUseCase;
+    private final IDashboardUseCase dashboardUseCase;
 
-    public DashboardServiceImpl(IDashboardUsecase dashboardUseCase) {
+    public DashboardServiceImpl(IDashboardUseCase dashboardUseCase) {
         this.dashboardUseCase = dashboardUseCase;
     }
 

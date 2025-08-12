@@ -5,17 +5,17 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.backend.shop.domains.models.MonthlyRevenueProjection;
-import com.backend.shop.domains.usecase.IDashboardUsecase;
+import com.backend.shop.domains.usecase.IDashboardUseCase;
 import com.backend.shop.infrastructure.repository.OrderJpaRepository;
-import com.backend.shop.infrastructure.repository.UserJapRepoitory;
+import com.backend.shop.infrastructure.repository.UserJapRepository;
 
 @Service
-public class DashboardUsecase implements IDashboardUsecase {
+public class DashboardUsecase implements IDashboardUseCase {
 
     private final OrderJpaRepository orderJpaRepository;
-    private final UserJapRepoitory userJapRepoitory;
+    private final UserJapRepository userJapRepoitory;
 
-    public DashboardUsecase(OrderJpaRepository orderJpaRepository,UserJapRepoitory userJapRepoitory) {
+    public DashboardUsecase(OrderJpaRepository orderJpaRepository,UserJapRepository userJapRepoitory) {
         this.orderJpaRepository = orderJpaRepository;
         this.userJapRepoitory = userJapRepoitory;
     }
@@ -28,6 +28,6 @@ public class DashboardUsecase implements IDashboardUsecase {
 
     @Override
     public Long subscriptionCount() {
-       return userJapRepoitory.countRoleUser();
+       return userJapRepoitory.countByRoles_Name("USER");
     }
 }

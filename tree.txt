@@ -1,0 +1,273 @@
+src/main/java
+└── com
+    └── backend
+        └── shop
+            ├── ShopApplication.java
+            ├── applications
+            │   ├── dto
+            │   │   ├── BaseDTO.java
+            │   │   ├── DataTablesOutputCustom.java
+            │   │   ├── Views.java
+            │   │   ├── activityLog
+            │   │   │   └── ActivityLogDTO.java
+            │   │   ├── auth
+            │   │   │   ├── AuthDTO.java
+            │   │   │   ├── SignInDTO.java
+            │   │   │   ├── TokenDTO.java
+            │   │   │   └── UserAuthProviderDTO.java
+            │   │   ├── category
+            │   │   │   ├── CategoryDTO.java
+            │   │   │   └── request
+            │   │   │       └── CategoryRequest.java
+            │   │   ├── dashboard
+            │   │   │   └── DashBoardDTO.java
+            │   │   ├── menu
+            │   │   │   └── MenuItemDTO.java
+            │   │   ├── order
+            │   │   │   ├── OrderDTO.java
+            │   │   │   ├── OrderItemDTO.java
+            │   │   │   ├── PaymentDTO.java
+            │   │   │   ├── ShippingAddressDTO.java
+            │   │   │   └── request
+            │   │   │       ├── OrderRequest.java
+            │   │   │       └── PaymentRequest.java
+            │   │   ├── product
+            │   │   │   ├── ProductDTO.java
+            │   │   │   ├── ProductOptionDTO.java
+            │   │   │   ├── ProductOptionValueDTO.java
+            │   │   │   ├── ProductVariantDTO.java
+            │   │   │   ├── ProductVariantOptionDTO.java
+            │   │   │   ├── VariantImageDTO.java
+            │   │   │   └── request
+            │   │   │       ├── ProductOptionRequest.java
+            │   │   │       ├── ProductOptionValueRequest.java
+            │   │   │       ├── ProductRequestDTO.java
+            │   │   │       ├── ProductVariantRequestDTO.java
+            │   │   │       └── VariantImageRequestDTO.java
+            │   │   └── roleAndPermission
+            │   │       ├── PermissionsDTO.java
+            │   │       ├── RoleBasicDTO.java
+            │   │       ├── RoleDTO.java
+            │   │       └── RoleMenuPermissionDTO.java
+            │   ├── interfaces
+            │   │   ├── IActivityLogService.java
+            │   │   ├── IAuthService.java
+            │   │   ├── ICategoryService.java
+            │   │   ├── IDashboardService.java
+            │   │   ├── IFileService.java
+            │   │   ├── IHelperService.java
+            │   │   ├── IMenuService.java
+            │   │   ├── IOrderService.java
+            │   │   ├── IProductOptionService.java
+            │   │   ├── IProductService.java
+            │   │   └── IRoleAndPermissionService.java
+            │   ├── mapper
+            │   │   ├── ActivityLogModelMapper.java
+            │   │   ├── CategoryModelMapper.java
+            │   │   ├── MenuItemModelMapper.java
+            │   │   ├── OrderItemModelMapper.java
+            │   │   ├── OrderModelMapper.java
+            │   │   ├── PaymentModelMapper.java
+            │   │   ├── ProductModelMapper.java
+            │   │   ├── ProductOptionModelMapper.java
+            │   │   ├── RoleMenuPermissionModelMapper.java
+            │   │   └── UserModelMapper.java
+            │   └── services
+            │       ├── MenuService.java
+            │       ├── activityLog
+            │       │   └── ActivityLogService.java
+            │       ├── authen
+            │       │   └── AuthServiceImpl.java
+            │       ├── category
+            │       │   └── CategoryServiceImpl.java
+            │       ├── dashboard
+            │       │   └── DashboardServiceImpl.java
+            │       ├── helper
+            │       │   ├── FileServiceImpl.java
+            │       │   └── HelperServiceImpl.java
+            │       ├── order
+            │       │   └── OrderServiceImpl.java
+            │       ├── product
+            │       │   ├── ProductServiceImpl.java
+            │       │   └── productOption
+            │       │       └── ProductOptionServiceImpl.java
+            │       └── roleAndPermission
+            │           └── RoleAndPermissionServiceImpl.java
+            ├── domains
+            │   ├── BaseResponse.java
+            │   ├── ResponseMessage.java
+            │   ├── ResponseWithPayload.java
+            │   ├── datatable
+            │   │   ├── DataTableFilter.java
+            │   │   ├── FilterCategory.java
+            │   │   ├── ResponseDataTable.java
+            │   │   └── product
+            │   │       └── ProductFilter.java
+            │   ├── enums
+            │   │   ├── ERole.java
+            │   │   └── enumOrder
+            │   │       ├── EOrderStatus.java
+            │   │       ├── EPaymentMethod.java
+            │   │       └── EPaymentStatus.java
+            │   ├── models
+            │   │   ├── ActivityLogs.java
+            │   │   ├── AuthProvider.java
+            │   │   ├── BaseModel.java
+            │   │   ├── Category.java
+            │   │   ├── Dashboard.java
+            │   │   ├── MenuItem.java
+            │   │   ├── MenuItemBasic.java
+            │   │   ├── MonthlyRevenueProjection.java
+            │   │   ├── Permissions.java
+            │   │   ├── Product.java
+            │   │   ├── ProductOption.java
+            │   │   ├── ProductOptionValue.java
+            │   │   ├── ProductVariant.java
+            │   │   ├── ProductVariantOption.java
+            │   │   ├── Role.java
+            │   │   ├── RoleBasic.java
+            │   │   ├── RoleMenuPermission.java
+            │   │   ├── User.java
+            │   │   ├── UserAuthProvider.java
+            │   │   ├── VariantImage.java
+            │   │   └── orders
+            │   │       ├── Order.java
+            │   │       ├── OrderItem.java
+            │   │       ├── Payment.java
+            │   │       └── ShippingAddressModel.java
+            │   └── usecase
+            │       ├── IActivityLogsUseCase.java
+            │       ├── IAuthUseCase.java
+            │       ├── ICategoryuseCase.java
+            │       ├── IDashboardUseCase.java
+            │       ├── IMenuUseCase.java
+            │       ├── IOrderUseCase.java
+            │       ├── IProductOptionUsecase.java
+            │       ├── IProductUseCase.java
+            │       └── IRoleAndPermissionUseCase.java
+            ├── infrastructure
+            │   ├── config
+            │   │   ├── AppConfig.java
+            │   │   ├── FileStoreProperties.java
+            │   │   ├── SecurityConfig.java
+            │   │   ├── SecurityConstant.java
+            │   │   └── SwaggerConfig.java
+            │   ├── entity
+            │   │   ├── ActivityLogsEntity.java
+            │   │   ├── BaseEntity.java
+            │   │   ├── CategoryEntity.java
+            │   │   ├── MenuItemEntity.java
+            │   │   ├── PermissionEntity.java
+            │   │   ├── ProductEntity.java
+            │   │   ├── ProductOptionEntity.java
+            │   │   ├── ProductOptionValueEntity.java
+            │   │   ├── ProductVariantEntity.java
+            │   │   ├── ProductVariantOptionEntity.java
+            │   │   ├── RoleEntity.java
+            │   │   ├── RoleMenuPermissionEntity.java
+            │   │   ├── UserAuthProviderEntity.java
+            │   │   ├── UsersEntity.java
+            │   │   ├── VariantImageEntity.java
+            │   │   └── order
+            │   │       ├── OrderEntity.java
+            │   │       ├── OrderItemEntity.java
+            │   │       ├── PaymentEntity.java
+            │   │       └── ShippingAddress.java
+            │   ├── exceptions
+            │   │   ├── AdviceHandleException.java
+            │   │   └── BaseException.java
+            │   ├── jwt
+            │   │   ├── exceptions
+            │   │   │   └── JwtException.java
+            │   │   ├── interfaces
+            │   │   │   ├── IFilterJwt.java
+            │   │   │   └── IJwtService.java
+            │   │   └── services
+            │   │       ├── FilterJwtImp.java
+            │   │       ├── JwtServiceImpl.java
+            │   │       └── UserDetailsServiceImpl.java
+            │   ├── mapper
+            │   │   ├── ActivityLogsMapper.java
+            │   │   ├── AuthMapper.java
+            │   │   ├── CategoryEntityMapper.java
+            │   │   ├── MenuItemMapper.java
+            │   │   ├── ProductEntityMapper.java
+            │   │   ├── ProductOptionEntityMapper.java
+            │   │   ├── ProductOptionValueEntityMapper.java
+            │   │   ├── ProductVariantEntityMapper.java
+            │   │   ├── ProductVariantOptionEntityMapper.java
+            │   │   ├── RoleMenuPermissionMapper.java
+            │   │   ├── VariantImageEntityMapper.java
+            │   │   └── orders
+            │   │       ├── OrderEntityMapper.java
+            │   │       ├── OrderItemEntityMapper.java
+            │   │       ├── PaymentEntityMapper.java
+            │   │       └── ShippingMapper.java
+            │   ├── repository
+            │   │   ├── ActivityLogsJpaRepository.java
+            │   │   ├── CategoryJpaRepository.java
+            │   │   ├── MenuItemJpaRepository.java
+            │   │   ├── OrderJpaRepository.java
+            │   │   ├── PermissionJpaRepository.java
+            │   │   ├── ProductJpaRepository.java
+            │   │   ├── ProductOptionJpaRepository.java
+            │   │   ├── ProductOptionValueJpaRepository.java
+            │   │   ├── ProductVariantJpaRepository.java
+            │   │   ├── ProductVariantOptionJpaRepository.java
+            │   │   ├── RoleJpaRepository.java
+            │   │   ├── RoleMenuPermissionJpaRepository.java
+            │   │   ├── UserAuthProviderJpaRepository.java
+            │   │   ├── UserJapRepository.java
+            │   │   └── VariantImageJpaRepository.java
+            │   ├── specification
+            │   │   ├── category
+            │   │   ├── datatable
+            │   │   │   └── DataTableSpecification.java
+            │   │   ├── menu
+            │   │   │   └── MenuItemSpecification.java
+            │   │   ├── product
+            │   │   │   └── ProductSpecification.java
+            │   │   ├── role
+            │   │   │   └── RoleSpecification.java
+            │   │   └── user
+            │   │       └── SpecificationUser.java
+            │   ├── usecase
+            │   │   ├── ActivityUseCase.java
+            │   │   ├── AuthUseCase.java
+            │   │   ├── CategoryUsecase.java
+            │   │   ├── DashboardUsecase.java
+            │   │   ├── MenuUseCase.java
+            │   │   ├── OrderUseCase.java
+            │   │   ├── ProductOptionUseCase.java
+            │   │   ├── ProductUseCase.java
+            │   │   └── RoleAndPermissionUseCase.java
+            │   └── utility
+            │       └── SecurityUtils.java
+            └── presentation
+                └── controllers
+                    ├── FileController.java
+                    ├── activitylog
+                    │   └── ActivityLogController.java
+                    ├── admin
+                    │   ├── category
+                    │   │   └── CategoryAdminController.java
+                    │   ├── dashboard
+                    │   │   └── DashboardController.java
+                    │   ├── order
+                    │   │   └── OrderAdminController.java
+                    │   ├── product
+                    │   │   ├── ProductAdminController.java
+                    │   │   └── productOption
+                    │   │       └── ProductOptionAdminController.java
+                    │   └── roleAndPermission
+                    │       └── RoleAndPermissionController.java
+                    ├── auth
+                    │   └── AuthController.java
+                    ├── category
+                    │   └── CategoryController.java
+                    ├── menu
+                    │   └── MenuController.java
+                    └── product
+                        └── ProductController.java
+
+72 directories, 199 files

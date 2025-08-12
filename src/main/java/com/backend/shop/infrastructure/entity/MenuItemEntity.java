@@ -1,7 +1,9 @@
 package com.backend.shop.infrastructure.entity;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -39,6 +41,10 @@ public class MenuItemEntity extends BaseEntity {
     @JsonManagedReference
     private List<MenuItemEntity> items = new ArrayList<>();
 
+    
+    
+    @OneToMany(mappedBy = "menuItem", fetch = FetchType.LAZY, cascade = CascadeType.ALL,orphanRemoval = true)
+    private Set<RoleMenuPermissionEntity> roleMenuPermissions = new HashSet<>();
 
      public MenuItemEntity() {
     }
@@ -126,11 +132,20 @@ public class MenuItemEntity extends BaseEntity {
     public void setIsGroup(Boolean isGroup) {
         this.isGroup = isGroup;
     }
+    
 
     @Override
     public String toString() {
         return "MenuItemEntity [title=" + title + ", url=" + url + ", icon=" + icon + ", sortOrder=" + sortOrder
                 + ", visible=" + visible + ", isGroup=" + isGroup + "]";
+    }
+
+    public Set<RoleMenuPermissionEntity> getRoleMenuPermissions() {
+        return roleMenuPermissions;
+    }
+
+    public void setRoleMenuPermissions(Set<RoleMenuPermissionEntity> roleMenuPermissions) {
+        this.roleMenuPermissions = roleMenuPermissions;
     }
 
     

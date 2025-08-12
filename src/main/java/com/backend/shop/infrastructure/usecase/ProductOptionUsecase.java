@@ -14,12 +14,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ProductOptionUsecase implements IProductOptionUsecase {
+public class ProductOptionUseCase implements IProductOptionUsecase {
 
     private final ProductOptionJpaRepository productOptionRepository;
     private final ProductOptionEntityMapper productOptionMapper;
 
-    public ProductOptionUsecase(ProductOptionJpaRepository productOptionRepository, ProductOptionEntityMapper productOptionMapper) {
+    public ProductOptionUseCase(ProductOptionJpaRepository productOptionRepository, ProductOptionEntityMapper productOptionMapper) {
         this.productOptionRepository = productOptionRepository;
         this.productOptionMapper = productOptionMapper;
     }

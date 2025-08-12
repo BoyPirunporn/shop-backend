@@ -4,7 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.backend.shop.applications.dto.BaseDTO;
-import com.backend.shop.domains.enums.ERole;
+import com.backend.shop.applications.dto.roleAndPermission.RoleDTO;
 
 public class ActivityLogDTO extends BaseDTO {
     private Long id;
@@ -23,7 +23,7 @@ public class ActivityLogDTO extends BaseDTO {
         private String email;
         private String firstName;
         private String lastName;
-        private Set<ERole> roles = new HashSet<>();
+        private Set<RoleDTO> roles = new HashSet<>();
 
         public Long getId() {
             return id;
@@ -57,11 +57,11 @@ public class ActivityLogDTO extends BaseDTO {
             this.lastName = lastName;
         }
 
-        public Set<ERole> getRoles() {
+        public Set<RoleDTO> getRoles() {
             return roles;
         }
 
-        public void setRoles(Set<ERole> roles) {
+        public void setRoles(Set<RoleDTO> roles) {
             this.roles = roles;
         }
 

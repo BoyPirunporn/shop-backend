@@ -12,19 +12,17 @@ import com.backend.shop.applications.interfaces.IAuthService;
 import com.backend.shop.applications.interfaces.IOrderService;
 import com.backend.shop.applications.mapper.OrderModelMapper;
 import com.backend.shop.domains.models.orders.Order;
-import com.backend.shop.domains.usecase.IOrderUsecase;
+import com.backend.shop.domains.usecase.IOrderUseCase;
 
-import lombok.extern.slf4j.Slf4j;
 
 @Service
-@Slf4j
 public class OrderServiceImpl implements IOrderService {
-
-    private final IOrderUsecase orderUsecase;
+    private static final Logger log = LoggerFactory.getLogger(OrderServiceImpl.class);
+    private final IOrderUseCase orderUsecase;
     private final OrderModelMapper orderModelMapper;
 
     public OrderServiceImpl(
-            IOrderUsecase orderUsecase,
+            IOrderUseCase orderUsecase,
             OrderModelMapper orderModelMapper,
             IAuthService authService) {
         this.orderUsecase = orderUsecase;

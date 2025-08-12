@@ -7,8 +7,10 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 public class BaseDTO {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createdAt;
+    
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime updatedAt;
+    
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }

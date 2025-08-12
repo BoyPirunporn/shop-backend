@@ -12,29 +12,36 @@ import com.backend.shop.applications.interfaces.IMenuService;
 import com.backend.shop.applications.mapper.MenuItemModelMapper;
 import com.backend.shop.domains.ResponseWithPayload;
 import com.backend.shop.domains.models.MenuItem;
-import com.backend.shop.domains.usecase.IMenuUsecase;
+import com.backend.shop.domains.models.MenuItemBasic;
+import com.backend.shop.domains.usecase.IMenuUseCase;
 
 @Service
 public class MenuService implements IMenuService {
 
     private final MenuItemModelMapper menuItemModelMapper;
-    private final IMenuUsecase menuUsecase;
+    private final IMenuUseCase menuUsecase;
 
-    public MenuService(MenuItemModelMapper menuItemModelMapper, IMenuUsecase menuUsecase) {
+    public MenuService(MenuItemModelMapper menuItemModelMapper, IMenuUseCase menuUsecase) {
         this.menuItemModelMapper = menuItemModelMapper;
         this.menuUsecase = menuUsecase;
     }
 
     @Override
-    public ResponseWithPayload<List<MenuItemDTO>> getMenu() {
-        List<MenuItemDTO> dtos = menuUsecase.getMenu().stream().map(menuItemModelMapper::toDTO)
+    public ResponseWithPayload<List<MenuItemDTO>> getMenuByRole() {
+        List<MenuItemDTO> dtos = menuUsecase.getMenuByRole().stream().map(menuItemModelMapper::toDTO)
+                .collect(Collectors.toList());
+        return new ResponseWithPayload<>(200, dtos);
+    }
+    @Override
+    public ResponseWithPayload<List<MenuItemDTO>> getAllMenu() {
+        List<MenuItemDTO> dtos = menuUsecase.getAllMenu().stream().map(menuItemModelMapper::toDTO)
                 .collect(Collectors.toList());
         return new ResponseWithPayload<>(200, dtos);
     }
 
     @Override
     public DataTablesOutput<MenuItemDTO> getMenu(DataTablesInput input) {
-       DataTablesOutput<MenuItem> output = menuUsecase.getMenuDataTable(input);
+       DataTablesOutput<MenuItemBasic> output = menuUsecase.getMenuDataTableBasic(input);
 
         DataTablesOutput<MenuItemDTO> result = new DataTablesOutput<>();
         result.setRecordsFiltered(output.getRecordsFiltered());

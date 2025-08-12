@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 
 import com.backend.shop.domains.datatable.DataTableFilter;
 import com.backend.shop.domains.models.Product;
-import com.backend.shop.domains.usecase.IProductUsecase;
+import com.backend.shop.domains.usecase.IProductUseCase;
 import com.backend.shop.infrastructure.entity.CategoryEntity;
 import com.backend.shop.infrastructure.entity.ProductEntity;
 import com.backend.shop.infrastructure.exceptions.BaseException;
@@ -25,14 +25,14 @@ import com.backend.shop.infrastructure.specification.datatable.DataTableSpecific
 import jakarta.transaction.Transactional;
 
 @Service
-public class ProductUsecase implements IProductUsecase {
+public class ProductUseCase implements IProductUseCase {
 
     private final ProductJpaRepository productJpaRepository;
     private final CategoryJpaRepository categoryJpaRepository;
 
     private final ProductEntityMapper productEntityMapper;
 
-    public ProductUsecase(ProductJpaRepository productJpaRepository, CategoryJpaRepository categoryJpaRepository,
+    public ProductUseCase(ProductJpaRepository productJpaRepository, CategoryJpaRepository categoryJpaRepository,
             ProductEntityMapper productEntityMapper) {
         this.productJpaRepository = productJpaRepository;
         this.categoryJpaRepository = categoryJpaRepository;

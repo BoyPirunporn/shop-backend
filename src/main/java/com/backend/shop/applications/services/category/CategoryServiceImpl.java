@@ -26,18 +26,18 @@ import com.backend.shop.domains.ResponseWithPayload;
 import com.backend.shop.domains.datatable.DataTableFilter;
 import com.backend.shop.domains.datatable.ResponseDataTable;
 import com.backend.shop.domains.models.Category;
-import com.backend.shop.domains.usecase.ICategoryusecase;
+import com.backend.shop.domains.usecase.ICategoryuseCase;
 import com.backend.shop.infrastructure.exceptions.BaseException;
 
 @Service
 public class CategoryServiceImpl implements ICategoryService {
 
     private static final Logger logger = LoggerFactory.getLogger(CategoryServiceImpl.class);
-    private final ICategoryusecase categoryUsecase;
+    private final ICategoryuseCase categoryUsecase;
     private final CategoryModelMapper categoryMapper;
     private final IFileService fileService;
 
-    public CategoryServiceImpl(ICategoryusecase categoryUsecase, CategoryModelMapper categoryMapper,
+    public CategoryServiceImpl(ICategoryuseCase categoryUsecase, CategoryModelMapper categoryMapper,
             IFileService fileService) {
         this.categoryUsecase = categoryUsecase;
         this.categoryMapper = categoryMapper;

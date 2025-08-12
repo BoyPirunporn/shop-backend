@@ -1,24 +1,39 @@
 package com.backend.shop.applications.dto.menu;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+import com.backend.shop.applications.dto.Views;
+import com.backend.shop.applications.dto.roleAndPermission.RoleMenuPermissionDTO;
+import com.fasterxml.jackson.annotation.JsonView;
 
 public class MenuItemDTO {
+    @JsonView({ Views.MenuItemDatatable.class, Views.DataTable.class, Views.MenuItem.class ,Views.MenuItemWithOutRoleMenuPermission.class})
     private Long id;
+    @JsonView({ Views.MenuItemDatatable.class, Views.DataTable.class, Views.MenuItem.class ,Views.MenuItemWithOutRoleMenuPermission.class})
     private String title;
+    @JsonView({ Views.MenuItemDatatable.class, Views.DataTable.class, Views.MenuItem.class ,Views.MenuItemWithOutRoleMenuPermission.class})
     private String url;
+    @JsonView({ Views.MenuItemDatatable.class, Views.DataTable.class, Views.MenuItem.class ,Views.MenuItemWithOutRoleMenuPermission.class})
     private String icon;
+    @JsonView({ Views.MenuItemDatatable.class, Views.DataTable.class, Views.MenuItem.class ,Views.MenuItemWithOutRoleMenuPermission.class})
     private Integer sortOrder;
+    @JsonView({ Views.MenuItemDatatable.class, Views.DataTable.class, Views.MenuItem.class,Views.MenuItemWithOutRoleMenuPermission.class })
     private Boolean visible;
+    @JsonView({ Views.MenuItemDatatable.class, Views.DataTable.class, Views.MenuItem.class,Views.MenuItemWithOutRoleMenuPermission.class })
     private Boolean isGroup;
-
+    @JsonView({ Views.MenuItemDatatable.class, Views.DataTable.class, Views.MenuItem.class ,Views.MenuItemWithOutRoleMenuPermission.class})
     private MenuItemDTO parent;
-
+    @JsonView({ Views.MenuItemDatatable.class, Views.DataTable.class, Views.MenuItem.class,Views.MenuItemWithOutRoleMenuPermission.class })
     private List<MenuItemDTO> items = new ArrayList<>();
+    @JsonView({ Views.MenuItemDatatable.class, Views.DataTable.class, Views.MenuItem.class })
+    private Set<RoleMenuPermissionDTO> roleMenuPermissions = new HashSet<>();
 
+    public MenuItemDTO() {
+    }
 
-    public MenuItemDTO(){}
     public Long getId() {
         return id;
     }
@@ -91,6 +106,12 @@ public class MenuItemDTO {
         this.items = items;
     }
 
-    
+    public Set<RoleMenuPermissionDTO> getRoleMenuPermissions() {
+        return roleMenuPermissions;
+    }
+
+    public void setRoleMenuPermissions(Set<RoleMenuPermissionDTO> roleMenuPermissions) {
+        this.roleMenuPermissions = roleMenuPermissions;
+    }
 
 }

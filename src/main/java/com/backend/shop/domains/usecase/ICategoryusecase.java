@@ -10,7 +10,7 @@ import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 import com.backend.shop.domains.datatable.DataTableFilter;
 import com.backend.shop.domains.models.Category;
 
-public interface ICategoryusecase {
+public interface ICategoryuseCase {
 
     void createCategory(Category category);
 

@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import com.backend.shop.infrastructure.jwt.exceptions.JwtException;
 
@@ -68,6 +69,15 @@ public class AdviceHandleException {
         adviceHandler.setMessage(ex.getMessage());
         adviceHandler.setStatus(403);
         return new ResponseEntity<>(adviceHandler, HttpStatus.FORBIDDEN);
+    }
+
+    @ExceptionHandler(NoResourceFoundException.class)
+    public ResponseEntity<IAdviceHandler> notFoundException(NoResourceFoundException ex){
+        IAdviceHandler adviceHandler = new IAdviceHandler();
+        ex.printStackTrace();
+        adviceHandler.setMessage(ex.getMessage());
+        adviceHandler.setStatus(404);
+        return new ResponseEntity<>(adviceHandler, HttpStatus.NOT_FOUND);
     }
 
     public class IAdviceHandler {

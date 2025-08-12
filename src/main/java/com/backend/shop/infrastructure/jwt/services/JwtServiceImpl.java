@@ -7,6 +7,8 @@ import java.util.function.Function;
 
 import javax.crypto.SecretKey;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -21,6 +23,7 @@ import io.jsonwebtoken.security.Keys;
 @Service
 public class JwtServiceImpl implements IJwtService {
 
+    private static final Logger logger = LoggerFactory.getLogger(JwtServiceImpl.class);
     @Value(value = "${application.security.jwt.secret-key}")
     private String secretKey;
     @Value(value = "${application.security.jwt.expiration}")

@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 
 import com.backend.shop.domains.datatable.DataTableFilter;
 import com.backend.shop.domains.models.Category;
-import com.backend.shop.domains.usecase.ICategoryusecase;
+import com.backend.shop.domains.usecase.ICategoryuseCase;
 import com.backend.shop.infrastructure.entity.CategoryEntity;
 import com.backend.shop.infrastructure.mapper.CategoryEntityMapper;
 import com.backend.shop.infrastructure.repository.CategoryJpaRepository;
@@ -23,7 +23,7 @@ import com.backend.shop.infrastructure.repository.CategoryJpaRepository;
 import jakarta.transaction.Transactional;
 
 @Service
-public class CategoryUsecase implements ICategoryusecase {
+public class CategoryUsecase implements ICategoryuseCase {
 
     private final CategoryJpaRepository categoryRepository;
     private final CategoryEntityMapper categoryEntityMapper;

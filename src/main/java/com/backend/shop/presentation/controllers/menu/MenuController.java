@@ -1,4 +1,4 @@
-package com.backend.shop.presentation.controllers;
+package com.backend.shop.presentation.controllers.menu;
 
 import java.util.List;
 import java.util.Map;
@@ -15,11 +15,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.backend.shop.applications.dto.Views;
 import com.backend.shop.applications.dto.menu.MenuItemDTO;
 import com.backend.shop.applications.interfaces.IMenuService;
 import com.backend.shop.domains.ResponseMessage;
 import com.backend.shop.domains.ResponseWithPayload;
 import com.backend.shop.infrastructure.exceptions.BaseException;
+import com.fasterxml.jackson.annotation.JsonView;
 
 @RestController
 @RequestMapping("/api/v1/menu")
@@ -31,8 +33,14 @@ public class MenuController {
     }
 
     @GetMapping
+    // @JsonView(Views.MenuItem.class)
     public ResponseEntity<ResponseWithPayload<List<MenuItemDTO>>> getMenu() {
-        return ResponseEntity.ok(menuService.getMenu());
+        return ResponseEntity.ok(menuService.getMenuByRole());
+    }
+    @GetMapping("/all")
+    @JsonView(Views.MenuItemWithOutRoleMenuPermission.class)
+    public ResponseEntity<ResponseWithPayload<List<MenuItemDTO>>> getAllMenu() {
+        return ResponseEntity.ok(menuService.getAllMenu());
     }
 
     @PostMapping
@@ -44,6 +52,7 @@ public class MenuController {
     }
 
     @PostMapping("/datatable")
+    @JsonView(Views.MenuItemDatatable.class)
     public ResponseEntity<DataTablesOutput<MenuItemDTO>> getMenu(@RequestBody DataTablesInput input) {
         return ResponseEntity.ok(menuService.getMenu(input));
     }

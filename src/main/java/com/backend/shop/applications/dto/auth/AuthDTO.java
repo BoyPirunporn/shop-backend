@@ -3,14 +3,22 @@ package com.backend.shop.applications.dto.auth;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.backend.shop.domains.enums.ERole;
-import com.backend.shop.presentation.validators.anotationValidate.RoleValidator;
+import com.backend.shop.applications.dto.roleAndPermission.RoleDTO;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 public class AuthDTO {
+    private Long id;
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     @NotBlank(message = "Email is required")
     @Email(message = "Email should be valid")
     private String email;
@@ -19,8 +27,18 @@ public class AuthDTO {
     @Size(min = 8, message = "Password must be at least 8 characters")
     private String password;
 
-    @RoleValidator(message = "Role must be [ USER, ADMIN, SUPER_ADMIN ]")
-    private Set<ERole> roles = new HashSet<>();
+    private String firstName;
+    private String lastName;
+    private String image;
+    private Set<UserAuthProviderDTO> authProviders;
+
+    
+    
+
+
+
+    // @RoleValidator(message = "Role must be [ USER, ADMIN, SUPER_ADMIN ]")
+    private Set<RoleDTO> roles = new HashSet<>();
 
     public String getEmail() {
         return email;
@@ -38,18 +56,52 @@ public class AuthDTO {
         this.password = password;
     }
 
-    public Set<ERole> getRoles() {
+    public Set<RoleDTO> getRoles() {
         return roles;
     }
 
-    public void setRoles(Set<ERole> roles) {
+    public void setRoles(Set<RoleDTO> roles) {
 
         this.roles = roles;
     }
 
+    
     @Override
     public String toString() {
         return "AuthDTO [email=" + email + ", password=" + password + ", roles=" + roles + "]";
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+
+    public Set<UserAuthProviderDTO> getAuthProviders() {
+        return authProviders;
+    }
+
+    public void setAuthProviders(Set<UserAuthProviderDTO> authProvider) {
+        this.authProviders = authProvider;
     }
 
 }

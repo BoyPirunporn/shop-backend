@@ -2,6 +2,10 @@ package com.backend.shop.presentation.controllers.auth;
 
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
+import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -9,24 +13,22 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.backend.shop.applications.dto.activityLog.ActivityLogDTO;
 import com.backend.shop.applications.dto.auth.AuthDTO;
 import com.backend.shop.applications.dto.auth.SignInDTO;
 import com.backend.shop.applications.dto.auth.TokenDTO;
-import com.backend.shop.applications.interfaces.IActivityLogService;
 import com.backend.shop.applications.interfaces.IAuthService;
 import com.backend.shop.domains.ResponseWithPayload;
 import com.backend.shop.infrastructure.exceptions.BaseException;
 
 import jakarta.validation.Valid;
-import lombok.extern.slf4j.Slf4j;
 
 @RestController
-@Slf4j
 @RequestMapping("${application.api.prefix}/auth")
 public class AuthController {
+    private static final Logger log = LoggerFactory.getLogger(AuthController.class);
 
     private final IAuthService authService;
+
     public AuthController(IAuthService authService) {
         this.authService = authService;
     }
@@ -51,14 +53,19 @@ public class AuthController {
 
     @PostMapping("refresh-token")
     public ResponseEntity<ResponseWithPayload<TokenDTO>> refreshToken(@RequestBody Map<String, String> body) {
-        //log.info(body.toString());
+        // log.info(body.toString());
         if (!body.containsKey("refreshToken")) {
             throw new BaseException("Unauthorized", HttpStatus.UNAUTHORIZED);
         }
         TokenDTO token = authService.refreshToken(body.get("refreshToken"));
-        //log.info(token.getRefreshToken());
-        //log.info("REFRESH TOKEN : "+token.toString());
+        // log.info(token.getRefreshToken());
+        // log.info("REFRESH TOKEN : "+token.toString());
         return ResponseEntity.ok(new ResponseWithPayload<>(200, token));
     }
 
+
+    @PostMapping("datatable")
+    public ResponseEntity<DataTablesOutput<AuthDTO>> dataTable(@RequestBody DataTablesInput input){
+        return ResponseEntity.ok(authService.dataTable(input));
+    }
 }

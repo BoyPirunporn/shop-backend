@@ -9,11 +9,13 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com.backend.shop.domains.enums.ERole;
-
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 
 @Entity(name = "users")
 public class UsersEntity extends BaseEntity implements UserDetails {
@@ -24,8 +26,13 @@ public class UsersEntity extends BaseEntity implements UserDetails {
     private String lastName;
     private String image;
 
-    @Enumerated(EnumType.STRING)
-    private Set<ERole> roles = new HashSet<>();
+    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL,orphanRemoval = true)
+    private Set<UserAuthProviderEntity> authProviders = new HashSet<>();
+    
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private Set<RoleEntity> roles = new HashSet<>();
 
     public String getEmail() {
         return email;
@@ -50,17 +57,29 @@ public class UsersEntity extends BaseEntity implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return roles.stream()
-                .map(role -> new SimpleGrantedAuthority(role.name()))
-                .collect(Collectors.toList());
+        Set<GrantedAuthority> authorities = new HashSet<>();
+        System.out.println("ROLE -> {}"+roles.size());
+        // ดึง ROLE_<NAME>
+        authorities.addAll(
+                roles.stream()
+                        .map(role -> new SimpleGrantedAuthority("ROLE_" + role.getName()))
+                        .collect(Collectors.toSet()));
 
+        // ดึง Permission ของแต่ละ Role
+        // authorities.addAll(
+        //         roles.stream()
+        //                 .flatMap(role -> role.getPermissions().stream())
+        //                 .map(permission -> new SimpleGrantedAuthority(permission.getName()))
+        //                 .collect(Collectors.toSet()));
+
+        return authorities;
     }
 
-    public Set<ERole> getRoles() {
+    public Set<RoleEntity> getRoles() {
         return roles;
     }
 
-    public void setRoles(Set<ERole> roles) {
+    public void setRoles(Set<RoleEntity> roles) {
         this.roles = roles;
     }
 
@@ -92,7 +111,16 @@ public class UsersEntity extends BaseEntity implements UserDetails {
     public String toString() {
         return "UsersEntity [id=" + getId() + ", email=" + email + ", password=" + password + ", firstName=" + firstName
                 + ", lastName="
-                + lastName + ", image=" + image + ", roles=" + roles + "]";
+                + lastName + ", image=" + image + "roles=" + "[" + roles.stream().map(RoleEntity::getName).toList().toString() + "]"
+                + ""+"]";
+    }
+// , roles=" + roles + "
+    public Set<UserAuthProviderEntity> getAuthProviders() {
+        return authProviders;
+    }
+
+    public void setAuthProviders(Set<UserAuthProviderEntity> authProviders) {
+        this.authProviders = authProviders;
     }
 
 }
