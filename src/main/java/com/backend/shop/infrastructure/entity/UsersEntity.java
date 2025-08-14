@@ -58,7 +58,6 @@ public class UsersEntity extends BaseEntity implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Set<GrantedAuthority> authorities = new HashSet<>();
-        System.out.println("ROLE -> {}"+roles.size());
         // ดึง ROLE_<NAME>
         authorities.addAll(
                 roles.stream()
@@ -66,11 +65,14 @@ public class UsersEntity extends BaseEntity implements UserDetails {
                         .collect(Collectors.toSet()));
 
         // ดึง Permission ของแต่ละ Role
-        // authorities.addAll(
-        //         roles.stream()
-        //                 .flatMap(role -> role.getPermissions().stream())
-        //                 .map(permission -> new SimpleGrantedAuthority(permission.getName()))
-        //                 .collect(Collectors.toSet()));
+        authorities.addAll(
+                roles.stream()
+                        .flatMap(role -> role.getRoleMenuPermissions().stream())
+                        .map(permission -> {
+                            System.out.println("PERMISSION -> " + permission.getMenuItem().getTitle() + "_" + permission.getPermission().getName());
+                            return new SimpleGrantedAuthority(permission.getMenuItem().getTitle() + "_" + permission.getPermission().getName());
+                        })
+                        .collect(Collectors.toSet()));
 
         return authorities;
     }

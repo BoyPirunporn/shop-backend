@@ -26,6 +26,12 @@ public class MenuItem extends MenuItemBasic {
         setSortOrder(sortOrder);
     }
 
+    public MenuItem(Long id,String title,MenuItem parent) {
+        setId(id);
+        setTitle(title);
+        setParent(parent);
+    }
+
     public MenuItem() {
     }
 
@@ -36,5 +42,13 @@ public class MenuItem extends MenuItemBasic {
     public void setRoleMenuPermissions(Set<RoleMenuPermission> roleMenuPermissions) {
         this.roleMenuPermissions = roleMenuPermissions;
     }
+
+    @Override
+    public String toString() {
+        return "MenuItem [roleMenuPermissions=" + roleMenuPermissions + "]";
+    }
+
+    
+
 
 }

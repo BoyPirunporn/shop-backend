@@ -25,5 +25,12 @@ public class Role extends RoleBasic{
     public Role(Long id, String name, String description, int level) {
         super(id, name, description, level);
     }
+    @Override
+    public String toString() {
+        return "Role [roleMenuPermissions=" + roleMenuPermissions + "]";
+    }
+
+    
+    
     
 }

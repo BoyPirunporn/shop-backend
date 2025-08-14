@@ -23,6 +23,7 @@ import com.backend.shop.domains.models.MenuItemBasic;
 import com.backend.shop.domains.usecase.IMenuUseCase;
 import com.backend.shop.infrastructure.entity.MenuItemEntity;
 import com.backend.shop.infrastructure.entity.RoleEntity;
+import com.backend.shop.infrastructure.entity.RoleMenuPermissionEntity;
 import com.backend.shop.infrastructure.entity.UsersEntity;
 import com.backend.shop.infrastructure.exceptions.BaseException;
 import com.backend.shop.infrastructure.mapper.MenuItemMapper;
@@ -45,47 +46,64 @@ public class MenuUseCase implements IMenuUseCase {
         this.menuItemMapper = menuItemMapper;
     }
 
-    
     @Override
     public List<MenuItem> getAllMenu() {
-        return menuItemJpaRepository.findAllByParentIsNull().stream().map(menuItemMapper::toModelWithOutRoleMenuPermission)
+        return menuItemJpaRepository.findAllByParentIsNull().stream()
+                .map(menuItemMapper::toModelWithOutRoleMenuPermission)
                 .collect(Collectors.toList());
     }
-    
+
     @Override
     public List<MenuItem> getMenuByRole() {
         UsersEntity user = SecurityUtils.getCurrentUserDetail();
-        log.info("USER -> {}",user.getRoles().toString());
-        Set<Long> roleIds = user != null ? user.getRoles().stream()
-                .map(RoleEntity::getId)
-                .collect(Collectors.toSet()) : new HashSet<>();
-                log.info("ROLEIDS -> {}",roleIds.toString());
-        if (roleIds.isEmpty()) {
+        if (user == null || user.getRoles().isEmpty()) {
             return Collections.emptyList();
         }
 
-        // 1. Fetch all accessible menu items in a single query to avoid the N+1 problem.
-        List<MenuItemEntity> allAccessibleItems = menuItemJpaRepository
-                .findDistinctByVisibleIsTrueAndRoleMenuPermissions_Role_IdInOrderBySortOrderAsc(roleIds);
+        Set<Long> userRoleIds = user.getRoles().stream()
+                .map(RoleEntity::getId)
+                .collect(Collectors.toSet());
 
-        // 2. Build the menu tree in memory for optimal performance.
+        // ดึง menu item ทั้งหมดที่ user สามารถเข้าถึงได้
+        List<MenuItemEntity> allAccessibleItems = menuItemJpaRepository
+                .findDistinctByRoleMenuPermissions_Role_IdInOrderBySortOrderAsc(userRoleIds);
+
+        // กรอง roleMenuPermissions ให้เหลือเฉพาะของเมนูนั้น และ role ของ user
+        allAccessibleItems.forEach(item -> {
+            if (item.getRoleMenuPermissions() != null) {
+                Set<RoleMenuPermissionEntity> filtered = item.getRoleMenuPermissions().stream()
+                        .filter(rmp -> rmp.getMenuItem() != null
+                                && rmp.getMenuItem().getId().equals(item.getId())
+                                && rmp.getRole() != null
+                                && userRoleIds.contains(rmp.getRole().getId())).map(e -> {
+                                    e.setMenuItem(null);
+                                    return e;
+                                })
+                        .collect(Collectors.toSet());
+                item.setRoleMenuPermissions(filtered);
+            } else {
+                item.setRoleMenuPermissions(new HashSet<>());
+            }
+            item.setItems(new ArrayList<>()); // เตรียม children
+        });
+
+        // สร้าง menu tree
         Map<Long, MenuItemEntity> menuMap = allAccessibleItems.stream()
-                .peek(item -> item.setItems(new ArrayList<>())) // Clear existing children to rebuild the hierarchy correctly.
                 .collect(Collectors.toMap(MenuItemEntity::getId, item -> item));
 
         List<MenuItemEntity> rootNodes = new ArrayList<>();
         allAccessibleItems.forEach(item -> {
             MenuItemEntity parent = item.getParent();
             if (parent != null && menuMap.containsKey(parent.getId())) {
-                // This item is a child of another accessible item.
                 menuMap.get(parent.getId()).getItems().add(item);
             } else {
-                // This is a root node (either it has no parent or its parent is not accessible).
                 rootNodes.add(item);
             }
         });
 
-        return rootNodes.stream().map(menuItemMapper::toModel)
+        // แปลงเป็น model สำหรับ UI
+        return rootNodes.stream()
+                .map(menuItemMapper::toModel)
                 .collect(Collectors.toList());
     }
 

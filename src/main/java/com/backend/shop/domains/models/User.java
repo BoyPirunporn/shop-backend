@@ -1,6 +1,7 @@
 package com.backend.shop.domains.models;
 
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class User extends BaseModel{
     
@@ -80,5 +81,10 @@ public class User extends BaseModel{
         return "User [id=" + getId() + ", email=" + email + ", password=" + password + "]";
     }
     
+    public String toRoleString(){
+        return roles.stream()
+            .map(Role::toString) // หรือ r -> r.getName() ถ้า Role มี name
+            .collect(Collectors.joining(", ")).toString(); // รวมด้วย ", "
+    }
     
 }

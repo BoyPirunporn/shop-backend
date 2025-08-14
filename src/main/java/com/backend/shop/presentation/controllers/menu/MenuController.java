@@ -33,7 +33,7 @@ public class MenuController {
     }
 
     @GetMapping
-    // @JsonView(Views.MenuItem.class)
+    @JsonView(Views.MenuItem.class)
     public ResponseEntity<ResponseWithPayload<List<MenuItemDTO>>> getMenu() {
         return ResponseEntity.ok(menuService.getMenuByRole());
     }

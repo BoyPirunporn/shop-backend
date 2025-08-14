@@ -8,6 +8,13 @@ public class Permissions  extends BaseModel{
     public Permissions() {
     }
     
+    
+
+    public Permissions(Long id) {
+        super(id);
+    }
+
+
 
     public Permissions(Long id, String name,String description) {
         super(id);
@@ -38,6 +45,15 @@ public class Permissions  extends BaseModel{
     public void setDescription(String description) {
         this.description = description;
     }
+
+
+
+    @Override
+    public String toString() {
+        return "Permissions [id=" + getId() + ", name=" + name + ", description=" + description + "]";
+    }
+    
+
     
 
 }

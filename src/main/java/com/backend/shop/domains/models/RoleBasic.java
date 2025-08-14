@@ -30,6 +30,12 @@ public class RoleBasic extends BaseModel {
     }
     public RoleBasic() {
     }
+    @Override
+    public String toString() {
+        return "RoleBasic [id=" + getId() + ", name=" + name + ", description=" + description + ", level=" + level + "]";
+    }
+    
+
     
     
 }

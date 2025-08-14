@@ -10,21 +10,21 @@ import com.backend.shop.applications.dto.roleAndPermission.RoleMenuPermissionDTO
 import com.fasterxml.jackson.annotation.JsonView;
 
 public class MenuItemDTO {
-    @JsonView({ Views.MenuItemDatatable.class, Views.DataTable.class, Views.MenuItem.class ,Views.MenuItemWithOutRoleMenuPermission.class})
+    @JsonView({ Views.MenuItemDatatable.class, Views.DataTable.class, Views.MenuItem.class,Views.MenuItemWithOutRoleMenuPermission.class})
     private Long id;
-    @JsonView({ Views.MenuItemDatatable.class, Views.DataTable.class, Views.MenuItem.class ,Views.MenuItemWithOutRoleMenuPermission.class})
+    @JsonView({ Views.MenuItemDatatable.class, Views.DataTable.class, Views.MenuItem.class,Views.MenuItemWithOutRoleMenuPermission.class})
     private String title;
-    @JsonView({ Views.MenuItemDatatable.class, Views.DataTable.class, Views.MenuItem.class ,Views.MenuItemWithOutRoleMenuPermission.class})
+    @JsonView({ Views.MenuItemDatatable.class, Views.DataTable.class, Views.MenuItem.class,Views.MenuItemWithOutRoleMenuPermission.class})
     private String url;
-    @JsonView({ Views.MenuItemDatatable.class, Views.DataTable.class, Views.MenuItem.class ,Views.MenuItemWithOutRoleMenuPermission.class})
+    @JsonView({ Views.MenuItemDatatable.class, Views.DataTable.class, Views.MenuItem.class,Views.MenuItemWithOutRoleMenuPermission.class})
     private String icon;
-    @JsonView({ Views.MenuItemDatatable.class, Views.DataTable.class, Views.MenuItem.class ,Views.MenuItemWithOutRoleMenuPermission.class})
+    @JsonView({ Views.MenuItemDatatable.class, Views.DataTable.class, Views.MenuItem.class,Views.MenuItemWithOutRoleMenuPermission.class})
     private Integer sortOrder;
     @JsonView({ Views.MenuItemDatatable.class, Views.DataTable.class, Views.MenuItem.class,Views.MenuItemWithOutRoleMenuPermission.class })
     private Boolean visible;
     @JsonView({ Views.MenuItemDatatable.class, Views.DataTable.class, Views.MenuItem.class,Views.MenuItemWithOutRoleMenuPermission.class })
     private Boolean isGroup;
-    @JsonView({ Views.MenuItemDatatable.class, Views.DataTable.class, Views.MenuItem.class ,Views.MenuItemWithOutRoleMenuPermission.class})
+    @JsonView({ Views.MenuItemDatatable.class, Views.DataTable.class, Views.MenuItem.class,Views.MenuItemWithOutRoleMenuPermission.class})
     private MenuItemDTO parent;
     @JsonView({ Views.MenuItemDatatable.class, Views.DataTable.class, Views.MenuItem.class,Views.MenuItemWithOutRoleMenuPermission.class })
     private List<MenuItemDTO> items = new ArrayList<>();

@@ -85,5 +85,12 @@ public class MenuItemBasic  extends BaseModel {
         this.items = items;
     }
 
+    @Override
+    public String toString() {
+        return "MenuItemBasic [id=" + getId() + ", title=" + title + ", url=" + url + ", icon=" + icon + ", sortOrder=" + sortOrder
+                + ", visible=" + visible + ", isGroup=" + isGroup + ", parent=" + parent+ ", items=" + items + "]";
+    }
+
+    
     
 }

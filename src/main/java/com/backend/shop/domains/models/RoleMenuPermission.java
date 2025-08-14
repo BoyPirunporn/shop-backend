@@ -22,7 +22,12 @@ public class RoleMenuPermission extends BaseModel {
     public void setPermission(Permissions permission) {
         this.permission = permission;
     }
+    @Override
+    public String toString() {
+        return "RoleMenuPermission [role=" + role.getId() + ", menuItem=" + menuItem.getId() + ", permission=" + permission.getId() + "]";
+    }
     
 
+    
     
 }

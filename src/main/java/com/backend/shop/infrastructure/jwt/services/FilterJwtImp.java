@@ -59,6 +59,7 @@ public class FilterJwtImp extends OncePerRequestFilter implements IFilterJwt {
             @SuppressWarnings("null") FilterChain filterChain)
             throws ServletException, IOException {
 
+                logger.info("[ REQUEST URI ] {}",request.getRequestURI());
         if (shouldNotFilter(request)) {
             logger.info("SHOULD NOT FILTER");
             filterChain.doFilter(request, response);

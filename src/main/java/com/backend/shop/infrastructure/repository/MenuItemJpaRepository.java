@@ -28,6 +28,9 @@ public interface MenuItemJpaRepository extends DataTablesRepository<MenuItemEnti
 
         List<MenuItemEntity> findDistinctByVisibleIsTrueAndRoleMenuPermissions_Role_IdInOrderBySortOrderAsc(
                 @Param("roleIds") Set<Long> roleIds);
+                
+        List<MenuItemEntity> findDistinctByRoleMenuPermissions_Role_IdInOrderBySortOrderAsc(
+                @Param("roleIds") Set<Long> roleIds);
 
         @Query("""
                         SELECT

@@ -2,6 +2,7 @@ package com.backend.shop.infrastructure.jwt.services;
 
 import java.util.Collection;
 
+import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,8 +34,6 @@ private static final Logger log = LoggerFactory.getLogger(UserDetailsServiceImpl
 
         UsersEntity user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-
-        log.info("USER -> {}" ,user.toString());
         // ✅ รองรับ Multiple Roles
         // Collection<? extends GrantedAuthority> authorities =  user.getAuthorities();
 

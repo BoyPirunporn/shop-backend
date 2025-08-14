@@ -10,8 +10,8 @@ import com.backend.shop.infrastructure.entity.UsersEntity;
 
 public interface UserJapRepository extends DataTablesRepository<UsersEntity,Long> {
     
-    @Query("SELECT u FROM users u LEFT JOIN FETCH u.roles r  WHERE email = :email")
-    public Optional<UsersEntity> findByEmail(@Param("email") String email);
+    @Query("SELECT u FROM users u LEFT JOIN FETCH u.roles r LEFT JOIN FETCH r.roleMenuPermissions rmp LEFT JOIN FETCH rmp.menuItem LEFT JOIN FETCH rmp.permission  WHERE email = :email")
+    public Optional<UsersEntity> findByEmail(String email);
     public boolean existsByEmail(String email);
 
     long countByRoles_Name(String roleName);

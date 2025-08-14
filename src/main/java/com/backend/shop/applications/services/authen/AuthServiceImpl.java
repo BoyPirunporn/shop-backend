@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -18,9 +19,7 @@ import com.backend.shop.applications.dto.auth.AuthDTO;
 import com.backend.shop.applications.dto.auth.SignInDTO;
 import com.backend.shop.applications.dto.auth.TokenDTO;
 import com.backend.shop.applications.interfaces.IAuthService;
-import com.backend.shop.applications.interfaces.IMenuService;
 import com.backend.shop.applications.mapper.UserModelMapper;
-import com.backend.shop.domains.models.Permissions;
 import com.backend.shop.domains.models.User;
 import com.backend.shop.domains.usecase.IAuthUseCase;
 import com.backend.shop.infrastructure.exceptions.BaseException;
@@ -34,17 +33,17 @@ public class AuthServiceImpl implements IAuthService {
     private final IAuthUseCase authUseCase;
     private final IJwtService jwtService;
     private final UserDetailsService userDetailsService;
-    private final IMenuService menuService;
+    // private final IMenuService menuService;
 
     private final PasswordEncoder passwordEncoder;
 
     public AuthServiceImpl(UserModelMapper userModelMapper, IAuthUseCase authUseCase, IJwtService jwtService,
-            UserDetailsService userDetailsService, IMenuService menuService, PasswordEncoder passwordEncoder) {
+            UserDetailsService userDetailsService, PasswordEncoder passwordEncoder) {
         this.userModelMapper = userModelMapper;
         this.authUseCase = authUseCase;
         this.jwtService = jwtService;
         this.userDetailsService = userDetailsService;
-        this.menuService = menuService;
+        // this.menuService = menuService;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -82,11 +81,13 @@ public class AuthServiceImpl implements IAuthService {
                         .collect(Collectors.toSet()));
 
         // // ดึง Permission ของแต่ละ Role
-        // authorities.addAll(
-        //         user.getRoles().stream()
-        //                 .flatMap(role -> role.getPermissions().stream())
-        //                 .map(Permissions::getName)
-        //                 .collect(Collectors.toSet()));
+       authorities.addAll(
+                user.getRoles().stream()
+                        .flatMap(role -> role.getRoleMenuPermissions().stream())
+                        .map(permission -> {
+                            return permission.getMenuItem().getTitle().replace(" ","_") + "_" + permission.getPermission().getName();
+                        })
+                        .collect(Collectors.toSet()));
 
         return new TokenDTO(
                 token,
